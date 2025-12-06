@@ -1,4 +1,4 @@
-package dev.codexo.app.srv.serverdrivenui.controller;
+package dev.codexo.app.srv.serverdrivenui.imeterrecorder.controller;
 
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
