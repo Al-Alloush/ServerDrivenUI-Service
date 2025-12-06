@@ -1,0 +1,30 @@
+# Ignore build artifacts
+target/
+*.jar
+*.war
+*.ear
+
+# Ignore IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore Git
+.git/
+.gitignore
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore Docker files (we're building)
+Dockerfile
+docker-compose.yml
+.dockerignore
