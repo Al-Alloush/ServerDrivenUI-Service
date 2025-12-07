@@ -1,5 +1,6 @@
 services:
   serverdrivenui:
+    image: ${IMAGE}
     container_name: serverdrivenui-api
     build:
       context: ..
