@@ -1,11 +1,12 @@
 services:
   serverdrivenui:
-    image: ${IMAGE}
+    image: serverdrivenui:dev
     container_name: serverdrivenui-dev-api
     networks:
       - internal
       - proxy
     environment:
+      - SPRING_PROFILES_ACTIVE=dev
       - SPRING_PROFILES_ACTIVE=docker
       - SERVER_PORT=8080
       - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info,metrics

@@ -1,11 +1,4 @@
-# Requires repository secrets:
-#   SSH_HOST        - Hostname or IP of the Hostinger Ubuntu server
-#   SSH_USERNAME    - SSH user with permissions to deploy and manage Docker
-#   SSH_PRIVATE_KEY - Private key matching the server's authorized_keys entry
-#   SSH_PORT        - (Optional) SSH port, defaults to 22
-#   DEPLOY_PATH     - Directory on the server where the project should livename: Deploy to Dev Server
-
-
+name: Deploy to Dev Server
 
 on:
   push:
@@ -17,30 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SSH_PORT: ${{ secrets.SSH_PORT }}   # ← ADD HERE
+      SSH_PORT: ${{ secrets.SSH_PORT }}
 
     steps:
-      # -------------------------
-      # CHECKOUT PROJECT
-      # -------------------------
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # -------------------------
-      # BUILD JAR USING MAVEN
-      # -------------------------
       - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '25'
 
+      # Build JAR
       - name: Build Spring Boot JAR
         run: mvn -B clean package -DskipTests
 
-      # -------------------------
-      # PREPARE SSH
-      # -------------------------
+      # Build Docker image (Dockerfile is in project root)
+      - name: Build Docker Image
+        run: docker build -t serverdrivenui:dev .
+
+      # Save Docker image to tar file
+      - name: Save Docker Image
+        run: docker save serverdrivenui:dev -o serverdrivenui.tar
+
+      # Prepare SSH
       - name: Add SSH key
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -49,33 +43,27 @@ jobs:
       - name: Add server to known_hosts
         run: ssh-keyscan -p ${SSH_PORT:-22} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      # -------------------------
-      # UPLOAD PROJECT FILES TO SERVER
-      # -------------------------
-      - name: Upload deployment files
+      # Upload the image to the server
+      - name: Upload Docker Image
         run: |
-          rsync -avz -e "ssh -p ${SSH_PORT:-22}" \
-            --exclude='.git' \
-            --exclude='target' \
-            ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
+          scp -P ${SSH_PORT:-22} serverdrivenui.tar \
+          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/serverdrivenui.tar
 
-      # -------------------------
-      # RUN DOCKER COMPOSE ON SERVER
-      # -------------------------
-      - name: Deploy with Docker Compose
+      # Deploy on server
+      - name: Deploy on Server
         run: |
-          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -p ${SSH_PORT:-22} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
-          
+
+            echo "Loading docker image..."
+            docker load -i serverdrivenui.tar
+
             echo "Stopping old containers..."
             docker compose -f deploy/docker-compose.dev.yml down || true
-          
-            echo "Building new container..."
-            docker compose -f deploy/docker-compose.dev.yml build
-          
-            echo "Starting new version..."
+
+            echo "Starting containers..."
             docker compose -f deploy/docker-compose.dev.yml up -d
-          
-            echo "Cleaning old images..."
+
+            echo "Cleaning unused images..."
             docker image prune -f
           EOF
