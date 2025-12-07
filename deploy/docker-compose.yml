@@ -2,8 +2,8 @@ services:
   serverdrivenui:
     container_name: serverdrivenui-api
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: ../Dockerfile
     networks:
       - internal
       - proxy

@@ -24,7 +24,16 @@ Thumbs.db
 *.log
 logs/
 
+#####################
 # Ignore Docker files (we're building)
 Dockerfile
-docker-compose.yml
 .dockerignore
+# Docker
+deploy/
+docker-compose.yml
+docker-compose.dev.yml
+docker-compose.test.yml
+docker-compose.prod.yml
+
+# Other unnecessary files
+*.tmp
