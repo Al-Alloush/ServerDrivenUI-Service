@@ -64,7 +64,9 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
+          REPO_LC="${GITHUB_REPOSITORY,,}"           # e.g. al-alloush/serverdrivenui-service
+          IMAGE="ghcr.io/${REPO_LC}:${IMAGE_TAG}"    # e.g. ghcr.io/al-alloush/serverdrivenui-service:dev
+          echo "IMAGE=$IMAGE"
           docker build -t "$IMAGE" .
           docker push "$IMAGE"
 
