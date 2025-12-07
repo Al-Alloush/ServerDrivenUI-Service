@@ -19,19 +19,27 @@ services:
       - "traefik.http.routers.serverdrivenui-api.rule=Host(`srvdrvnui-dev.codexo.dev`)"
       - "traefik.http.routers.serverdrivenui-api.entrypoints=websecure"
       - "traefik.http.routers.serverdrivenui-api.tls.certresolver=letsencrypt"
-      
+      - "traefik.http.routers.serverdrivenui-api.middlewares=cors-api"
+
       # Service configuration
       - "traefik.http.services.serverdrivenui-api.loadbalancer.server.port=8080"
-      
+
       # Health check
       - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.path=/imeterrecorder/ping"
       - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.interval=30s"
+
+      # Router for direct IP access (Postman)
+      - "traefik.http.routers.serverdrivenui-ip.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.serverdrivenui-ip.entrypoints=websecure"
+      - "traefik.http.routers.serverdrivenui-ip.tls=true"
+      - "traefik.http.routers.serverdrivenui-ip.middlewares=cors-api"
+      - "traefik.http.routers.serverdrivenui-ip.service=serverdrivenui-api"
       
       # CORS middleware for API access
-#      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
-#      - "traefik.http.middlewares.cors-api.headers.accesscontrolalloworiginlist=https://codexo.dev,https://*.codexo.dev"
-#      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowheaders=Content-Type,Authorization,X-Requested-With"
-#      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowcredentials=true"
+      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
+      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolalloworiginlist=https://codexo.dev,https://*.codexo.dev"
+      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowheaders=Content-Type,Authorization,X-Requested-With"
+      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowcredentials=true"
       
       # Apply CORS middleware
       - "traefik.http.routers.serverdrivenui-api.middlewares=cors-api"
@@ -44,7 +52,7 @@ services:
       start_period: 60s
     
     restart: unless-stopped
-    
+
 networks:
   internal:
     external: true
