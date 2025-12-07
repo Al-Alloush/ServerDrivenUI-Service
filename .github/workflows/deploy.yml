@@ -11,6 +11,7 @@ jobs:
 
     env:
       SSH_PORT: ${{ secrets.SSH_PORT }}
+      APP_NAME: ServerDrivenUiServcie-0.0.1-SNAPSHOT.tar
 
     steps:
       - name: Checkout code
@@ -32,7 +33,7 @@ jobs:
 
       # Save Docker image to tar file
       - name: Save Docker Image
-        run: docker save serverdrivenui:dev -o serverdrivenui.tar
+        run: docker save serverdrivenui:dev -o ${APP_NAME}
 
       # Prepare SSH
       - name: Add SSH key
@@ -46,8 +47,8 @@ jobs:
       # Upload the image to the server
       - name: Upload Docker Image
         run: |
-          scp -P ${SSH_PORT:-22} serverdrivenui.tar \
-          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/serverdrivenui.tar
+          scp -P ${SSH_PORT:-22} ${APP_NAME} \
+          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/${APP_NAME}
 
       # Deploy on server
       - name: Deploy on Server
@@ -56,7 +57,7 @@ jobs:
             cd ${{ secrets.DEPLOY_PATH }}
 
             echo "Loading docker image..."
-            docker load -i serverdrivenui.tar
+            docker load -i ${APP_NAME}
 
             echo "Stopping old containers..."
             docker compose -f deploy/docker-compose.dev.yml down || true
