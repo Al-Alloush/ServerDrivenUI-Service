@@ -109,7 +109,7 @@ jobs:
       - name: Deploy with Docker Compose
         run: |
           PORT=${SSH_PORT:-22}
-          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" <<'EOF'
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" <<EOF
             set -e
             cd "$DEPLOY_PATH"
             docker compose down --remove-orphans || true
