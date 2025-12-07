@@ -1,0 +1,163 @@
+# Requires repository secrets:
+#   SSH_HOST        - Hostname or IP of the Hostinger Ubuntu server
+#   SSH_USERNAME    - SSH user with permissions to deploy and manage Docker
+#   SSH_PRIVATE_KEY - Private key matching the server's authorized_keys entry
+#   SSH_PORT        - (Optional) SSH port, defaults to 22
+#   DEPLOY_PATH     - Directory on the server where the project should live
+
+# yaml
+# File: .github/workflows/deploy.yml
+name: CI/CD Deploy (develop / test / production)
+
+on:
+  push:
+    branches: [develop, test, main]
+  pull_request:
+    types: [closed]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+
+      - name: Build
+        run: ./mvnw -B verify -DskipTests
+
+  deploy_develop:
+    needs: build
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop')
+    env:
+      # later add _DEVELOP to secrets for clarity
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY:  ${{ secrets.SSH_PRIVATE_KEY }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+    steps:
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ env.SSH_KEY }}
+
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          PORT=${SSH_PORT:-22}
+          ssh-keyscan -p "$PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Sync to server
+        run: |
+          PORT=${SSH_PORT:-22}
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH'"
+          rsync -az --delete -e "ssh -p $PORT" --exclude '.git' --exclude '.github' ./ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Deploy with Docker Compose
+        run: |
+          PORT=${SSH_PORT:-22}
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" <<'EOF'
+            set -e
+            cd "$DEPLOY_PATH"
+            docker compose down --remove-orphans || true
+            docker compose build --pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
+          EOF
+
+  deploy_test:
+    needs: build
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/test') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'test')
+    env:
+      # later add _TEST to secrets for clarity
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY:  ${{ secrets.SSH_PRIVATE_KEY }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+    steps:
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ env.SSH_KEY }}
+
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          PORT=${SSH_PORT:-22}
+          ssh-keyscan -p "$PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Sync to server
+        run: |
+          PORT=${SSH_PORT:-22}
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH'"
+          rsync -az --delete -e "ssh -p $PORT" --exclude '.git' --exclude '.github' ./ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Deploy with Docker Compose
+        run: |
+          PORT=${SSH_PORT:-22}
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" <<'EOF'
+            set -e
+            cd "$DEPLOY_PATH"
+            docker compose down --remove-orphans || true
+            docker compose build --pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
+          EOF
+
+  deploy_prod:
+    needs: build
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main')
+    environment: production
+    env:
+      # this is the main production deploy
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USERNAME }}
+      SSH_KEY:  ${{ secrets.SSH_PRIVATE_KEY }}
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+    steps:
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ env.SSH_KEY }}
+
+      - name: Add host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          PORT=${SSH_PORT:-22}
+          ssh-keyscan -p "$PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Sync to server
+        run: |
+          PORT=${SSH_PORT:-22}
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH'"
+          rsync -az --delete -e "ssh -p $PORT" --exclude '.git' --exclude '.github' ./ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Deploy with Docker Compose
+        run: |
+          PORT=${SSH_PORT:-22}
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" <<'EOF'
+            set -e
+            cd "$DEPLOY_PATH"
+            docker compose down --remove-orphans || true
+            docker compose build --pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
+          EOF
