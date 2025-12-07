@@ -7,11 +7,11 @@
 
 # yaml
 # File: .github/workflows/deploy.yml
-name: CI/CD Deploy (develop / test / production)
+name: CI/CD Deploy (dev / test / production)
 
 on:
   push:
-    branches: [develop, test, main]
+    branches: [dev, test, main]
   pull_request:
     types: [closed]
 
@@ -32,14 +32,14 @@ jobs:
       - name: Build
         run: ./mvnw -B verify -DskipTests
 
-  deploy_develop:
+  deploy_dev:
     needs: build
     runs-on: ubuntu-latest
     if: >
-      (github.event_name == 'push' && github.ref == 'refs/heads/develop') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'develop')
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'dev')
     env:
-      # later add _DEVELOP to secrets for clarity
+      # later add _DEV to secrets for clarity
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USERNAME }}
       SSH_KEY:  ${{ secrets.SSH_PRIVATE_KEY }}
