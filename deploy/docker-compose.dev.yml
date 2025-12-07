@@ -36,10 +36,11 @@ services:
       - "traefik.http.routers.serverdrivenui-ip.service=serverdrivenui-api"
       
       # CORS middleware for API access
-      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
-      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolalloworiginlist=https://codexo.dev,https://*.codexo.dev"
-      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowheaders=Content-Type,Authorization,X-Requested-With"
-      #      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowcredentials=true"
+      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
+      - "traefik.http.middlewares.cors-api.headers.accesscontrolalloworiginlist=*"
+      #- "traefik.http.middlewares.cors-api.headers.accesscontrolalloworiginlist=https://codexo.dev,https://*.codexo.dev"
+      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowheaders=Content-Type,Authorization,X-Requested-With"
+      - "traefik.http.middlewares.cors-api.headers.accesscontrolallowcredentials=true"
       
       # Apply CORS middleware
       - "traefik.http.routers.serverdrivenui-api.middlewares=cors-api"
