@@ -1,9 +1,7 @@
 services:
   serverdrivenui:
+    image: ${IMAGE}
     container_name: serverdrivenui-test-api
-    build:
-      context: ..
-      dockerfile: ../Dockerfile
     networks:
       - internal
       - proxy

@@ -4,6 +4,10 @@ on:
   push:
     branches: [dev, test, main]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,12 +18,17 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 25
+          java-version: 21
           cache: maven
 
-      - name: Build
-        run: ./mvnw -B verify -DskipTests
+      - name: Build JAR
+        run: ./mvnw -B -DskipTests package
 
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
 
   ###############################
   # DEV DEPLOY
@@ -34,9 +43,30 @@ jobs:
       SSH_KEY:  ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
       DEPLOY_PATH: /srv/apps/ServerDrivenUI/ServerDrivenUI-Service/dev
-
+      IMAGE_TAG: dev
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push image (DEV)
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
 
       - name: Start SSH agent
         uses: webfactory/ssh-agent@v0.9.0
@@ -48,21 +78,23 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "${SSH_PORT:-22}" "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Upload DEV compose file
+      - name: Upload compose & .env (DEV)
         run: |
           PORT=${SSH_PORT:-22}
+          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
           ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p $DEPLOY_PATH"
           rsync -avz -e "ssh -p $PORT" deploy/docker-compose.dev.yml \
             "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.yml"
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "printf 'IMAGE=%s\n' '$IMAGE' > $DEPLOY_PATH/.env"
 
-      - name: Deploy DEV
+      - name: Deploy (DEV)
         run: |
           ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "
             cd $DEPLOY_PATH;
+            docker compose pull;
             docker compose down --remove-orphans || true;
-            docker compose up -d --build;
+            docker compose up -d;
           "
-
 
   ###############################
   # TEST DEPLOY
@@ -77,12 +109,28 @@ jobs:
       SSH_KEY:  ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
       DEPLOY_PATH: /srv/apps/ServerDrivenUI/ServerDrivenUI-Service/test
-
+      IMAGE_TAG: test
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target
 
-      - name: Start SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push image (TEST)
+        env: { DOCKER_BUILDKIT: 1 }
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ env.SSH_KEY }}
 
@@ -91,20 +139,23 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "${SSH_PORT:-22}" "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Upload TEST compose file
+      - name: Upload compose & .env (TEST)
         run: |
-          ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "mkdir -p $DEPLOY_PATH"
-          rsync -avz -e "ssh -p ${SSH_PORT:-22}" deploy/docker-compose.test.yml \
+          PORT=${SSH_PORT:-22}
+          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p $DEPLOY_PATH"
+          rsync -avz -e "ssh -p $PORT" deploy/docker-compose.test.yml \
             "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.yml"
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "printf 'IMAGE=%s\n' '$IMAGE' > $DEPLOY_PATH/.env"
 
-      - name: Deploy TEST
+      - name: Deploy (TEST)
         run: |
           ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "
             cd $DEPLOY_PATH;
+            docker compose pull;
             docker compose down --remove-orphans || true;
-            docker compose up -d --build;
+            docker compose up -d;
           "
-
 
   ###############################
   # PROD DEPLOY
@@ -119,12 +170,28 @@ jobs:
       SSH_KEY:  ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
       DEPLOY_PATH: /srv/apps/ServerDrivenUI/ServerDrivenUI-Service/prod
-
+      IMAGE_TAG: latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target
 
-      - name: Start SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push image (PROD)
+        env: { DOCKER_BUILDKIT: 1 }
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ env.SSH_KEY }}
 
@@ -133,16 +200,20 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "${SSH_PORT:-22}" "$SSH_HOST" >> ~/.ssh/known_hosts
 
-      - name: Upload PROD compose file
+      - name: Upload compose & .env (PROD)
         run: |
-          ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "mkdir -p $DEPLOY_PATH"
-          rsync -avz -e "ssh -p ${SSH_PORT:-22}" deploy/docker-compose.prod.yml \
+          PORT=${SSH_PORT:-22}
+          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p $DEPLOY_PATH"
+          rsync -avz -e "ssh -p $PORT" deploy/docker-compose.prod.yml \
             "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.yml"
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "printf 'IMAGE=%s\n' '$IMAGE' > $DEPLOY_PATH/.env"
 
-      - name: Deploy PROD
+      - name: Deploy (PROD)
         run: |
           ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "
             cd $DEPLOY_PATH;
+            docker compose pull;
             docker compose down --remove-orphans || true;
-            docker compose up -d --build;
+            docker compose up -d;
           "

@@ -17,8 +17,10 @@ target/
 Thumbs.db
 
 # Ignore Git
+.git
 .git/
 .gitignore
+.github
 
 # Ignore logs
 *.log
@@ -37,3 +39,4 @@ docker-compose.prod.yml
 
 # Other unnecessary files
 *.tmp
+!target/*.jar
