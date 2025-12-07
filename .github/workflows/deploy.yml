@@ -64,9 +64,9 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          REPO_LC="${GITHUB_REPOSITORY,,}"           # e.g. al-alloush/serverdrivenui-service
-          IMAGE="ghcr.io/${REPO_LC}:${IMAGE_TAG}"    # e.g. ghcr.io/al-alloush/serverdrivenui-service:dev
-          echo "IMAGE=$IMAGE"
+          REPO_LC="${GITHUB_REPOSITORY,,}"
+          IMAGE="ghcr.io/${REPO_LC}:${IMAGE_TAG}"
+          echo "Using IMAGE=$IMAGE"
           docker build -t "$IMAGE" .
           docker push "$IMAGE"
 
@@ -83,19 +83,23 @@ jobs:
       - name: Upload compose & .env (DEV)
         run: |
           PORT=${SSH_PORT:-22}
-          IMAGE="ghcr.io/${{ github.repository }}:${IMAGE_TAG}"
+          REPO_LC="${GITHUB_REPOSITORY,,}"
+          IMAGE="ghcr.io/${REPO_LC}:${IMAGE_TAG}"
           ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p $DEPLOY_PATH"
           rsync -avz -e "ssh -p $PORT" deploy/docker-compose.dev.yml \
             "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/docker-compose.yml"
-          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "printf 'IMAGE=%s\n' '$IMAGE' > $DEPLOY_PATH/.env"
+          ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "printf 'IMAGE=%s\n' '$IMAGE' > $DEPLOY_PATH/.env && cat $DEPLOY_PATH/.env"
 
       - name: Deploy (DEV)
         run: |
           ssh -p "${SSH_PORT:-22}" "$SSH_USER@$SSH_HOST" "
-            cd $DEPLOY_PATH;
-            docker compose pull;
-            docker compose down --remove-orphans || true;
-            docker compose up -d;
+            set -e
+            cd $DEPLOY_PATH
+            echo 'Compose IMAGE ->' && cat .env
+            docker compose pull
+            docker compose down --remove-orphans || true
+            docker compose up -d
+            docker compose ps
           "
 
   ###############################
