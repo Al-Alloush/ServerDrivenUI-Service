@@ -1,0 +1,41 @@
+services:
+  serverdrivenui:
+    image: serverdrivenui:dev
+    container_name: serverdrivenui-local-api
+    networks:
+      - internal
+      - proxy
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev,docker
+      - SERVER_PORT=8080
+      - MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info,metrics
+    labels:
+      # Traefik configuration for API access
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+
+      # HTTP Router for local testing
+      - "traefik.http.routers.serverdrivenui-local.rule=Host(`localhost`) && PathPrefix(`/imeterrecorder`)"
+      - "traefik.http.routers.serverdrivenui-local.entrypoints=web"
+
+      # Service configuration
+      - "traefik.http.services.serverdrivenui-local.loadbalancer.server.port=8080"
+
+      # Health check
+      - "traefik.http.services.serverdrivenui-local.loadbalancer.healthcheck.path=/imeterrecorder/ping"
+      - "traefik.http.services.serverdrivenui-local.loadbalancer.healthcheck.interval=30s"
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/imeterrecorder/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    restart: unless-stopped
+
+networks:
+  internal:
+    external: true
+  proxy:
+    external: true
