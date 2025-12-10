@@ -24,4 +24,12 @@ public class IMeterRecorderController {
     public ResponseEntity<@NonNull String> info() {
         return ResponseEntity.ok("ServerDrivenUI Service - IMeter Recorder API v1.0");
     }
+
+    // Colors endpoint returning primary and secondary hex values
+    @GetMapping("/colors")
+    public ResponseEntity<@NonNull ColorPalette> colors() {
+        return ResponseEntity.ok(new ColorPalette("#26c998", "#444dcf"));
+    }
+
+    public record ColorPalette(String primary, String secondary) {}
 }
