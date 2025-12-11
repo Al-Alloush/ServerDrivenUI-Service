@@ -6,11 +6,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorPalette;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
+
 @RestController
 @RequestMapping("/imeterrecorder")
 public class IMeterRecorderController {
 
-    public IMeterRecorderController() {
+    private final ColorPaletteService colorPaletteService;
+
+    public IMeterRecorderController(ColorPaletteService colorPaletteService) {
+        this.colorPaletteService = colorPaletteService;
     }
 
     // Health check endpoint
@@ -25,11 +31,10 @@ public class IMeterRecorderController {
         return ResponseEntity.ok("ServerDrivenUI Service - IMeter Recorder API v1.0");
     }
 
-    // Colors endpoint returning primary and secondary hex values
+    // Colors endpoint returning a randomized color palette
     @GetMapping("/colors")
     public ResponseEntity<@NonNull ColorPalette> colors() {
-        return ResponseEntity.ok(new ColorPalette("#26c998", "#444dcf"));
+        return ResponseEntity.ok(colorPaletteService.randomPalette());
     }
 
-    public record ColorPalette(String primary, String secondary) {}
 }
