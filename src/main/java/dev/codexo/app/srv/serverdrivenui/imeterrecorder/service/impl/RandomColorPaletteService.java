@@ -20,10 +20,11 @@ public class RandomColorPaletteService implements ColorPaletteService {
         String primaryDark = lightenOrDarken(primary, -40);
         String primaryDarkText = randomTextContrast(primary);
         String secondary = randomHexColor();
+        String secondaryDark = randomHexColor();
         String secondaryDarkText = randomTextContrast(secondary);
         String tertiary = randomHexColor();
 
-        return new ColorPalette(primary, primaryDark, primaryDarkText, secondary, secondaryDarkText, tertiary);
+        return new ColorPalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
     }
 
     private String randomHexColor() {

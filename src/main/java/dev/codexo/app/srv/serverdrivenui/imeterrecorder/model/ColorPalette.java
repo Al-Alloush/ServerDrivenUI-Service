@@ -5,6 +5,7 @@ public record ColorPalette(
         String primaryDark,
         String primaryDarkText,
         String secondary,
+        String SecondaryDark,
         String secondaryDarkText,
         String tertiary
 ) {}
