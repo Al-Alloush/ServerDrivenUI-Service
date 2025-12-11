@@ -29,8 +29,6 @@
     <properties>
         <!-- Set a supported java compilation level for the local environment -->
         <java.version>25</java.version>
-        <!-- Override parent maven.compiler.release which may be set to an unsupported value -->
-        <maven.compiler.release>25</maven.compiler.release>
     </properties>
     <dependencies>
         <dependency>
