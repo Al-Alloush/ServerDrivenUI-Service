@@ -8,15 +8,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorPalette;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ButtonStyleService;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonStyle;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/imeterrecorder")
 public class IMeterRecorderController {
 
     private final ColorPaletteService colorPaletteService;
+    private final ButtonStyleService buttonStyleService;
 
-    public IMeterRecorderController(ColorPaletteService colorPaletteService) {
+    public IMeterRecorderController(ColorPaletteService colorPaletteService, ButtonStyleService buttonStyleService) {
         this.colorPaletteService = colorPaletteService;
+        this.buttonStyleService = buttonStyleService;
     }
 
     // Health check endpoint
@@ -35,6 +42,13 @@ public class IMeterRecorderController {
     @GetMapping("/colors")
     public ResponseEntity<@NonNull ColorPalette> colors() {
         return ResponseEntity.ok(colorPaletteService.randomPalette());
+    }
+
+    // Button styles endpoint returning randomized button styles
+    @GetMapping("/style/buttons")
+    public ResponseEntity<@NonNull Map<String, List<ButtonStyle>>> buttons() {
+        List<ButtonStyle> buttons = buttonStyleService.randomButtons();
+        return ResponseEntity.ok(Map.of("buttons", buttons));
     }
 
 }
