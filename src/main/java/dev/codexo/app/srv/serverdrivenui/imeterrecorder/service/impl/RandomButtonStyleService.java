@@ -1,6 +1,7 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.impl;
 
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonStyle;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonStylesDto;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonThemesWrapperDto;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ButtonStyleService;
 import org.springframework.stereotype.Service;
 
@@ -14,23 +15,40 @@ public class RandomButtonStyleService implements ButtonStyleService {
     private final Random random = new Random();
 
     @Override
-    public List<ButtonStyle> randomButtons() {
-        List<ButtonStyle> buttons = new ArrayList<>();
+    public ButtonThemesWrapperDto randomButtons() {
+        ButtonThemesWrapperDto buttonThemes = new ButtonThemesWrapperDto();
 
-        // Primary button
-        String primaryBg = randomHexColor();
-        String primaryText = contrastText(primaryBg);
-        int primaryRadius = randomCornerRadius(8, 20); // bias to larger radius
-        buttons.add(new ButtonStyle("PrimaryButton", primaryBg, primaryText, primaryRadius));
+        // Light theme buttons
+        String lightPrimaryBg = randomHexColor();
+        String lightPrimaryText = contrastText(lightPrimaryBg);
+        int lightPrimaryRadius = randomCornerRadius(8, 20);
 
-        // Secondary button
-        String secondaryBg = randomHexColor();
-        String secondaryText = contrastText(secondaryBg);
-        int secondaryRadius = randomCornerRadius(2, 12);
-        buttons.add(new ButtonStyle("SecondaryButton", secondaryBg, secondaryText, secondaryRadius));
+        String lightSecondaryBg = randomHexColor();
+        String lightSecondaryText = contrastText(lightSecondaryBg);
+        int lightSecondaryRadius = randomCornerRadius(2, 12);
 
-        return buttons;
+        List<ButtonStylesDto> lightButtons = new ArrayList<>();
+        lightButtons.add(new ButtonStylesDto("PrimaryButton", lightPrimaryBg, lightPrimaryText, lightPrimaryRadius));
+        lightButtons.add(new ButtonStylesDto("SecondaryButton", lightSecondaryBg, lightSecondaryText, lightSecondaryRadius));
+        buttonThemes.setLight(lightButtons);
+
+        // Dark theme buttons
+        String darkPrimaryBg = randomHexColor();
+        String darkPrimaryText = contrastText(darkPrimaryBg);
+        int darkPrimaryRadius = randomCornerRadius(8, 20);
+
+        String darkSecondaryBg = randomHexColor();
+        String darkSecondaryText = contrastText(darkSecondaryBg);
+        int darkSecondaryRadius = randomCornerRadius(2, 12);
+
+        List<ButtonStylesDto> darkButtons = new ArrayList<>();
+        darkButtons.add(new ButtonStylesDto("PrimaryButton", darkPrimaryBg, darkPrimaryText, darkPrimaryRadius));
+        darkButtons.add(new ButtonStylesDto("SecondaryButton", darkSecondaryBg, darkSecondaryText, darkSecondaryRadius));
+        buttonThemes.setDark(darkButtons);
+
+        return buttonThemes;
     }
+
 
     private String randomHexColor() {
         int r = random.nextInt(256);

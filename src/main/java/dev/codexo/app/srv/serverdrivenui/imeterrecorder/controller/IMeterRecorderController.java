@@ -1,5 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.controller;
 
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonThemesWrapperDto;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorThemeWrapperDto;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ButtonStyleService;
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonStyle;
 
 import java.util.List;
 import java.util.Map;
@@ -46,9 +46,9 @@ public class IMeterRecorderController {
 
     // Button styles endpoint returning randomized button styles
     @GetMapping("/style/buttons")
-    public ResponseEntity<@NonNull Map<String, List<ButtonStyle>>> buttons() {
-        List<ButtonStyle> buttons = buttonStyleService.randomButtons();
-        return ResponseEntity.ok(Map.of("buttons", buttons));
+    public ResponseEntity<@NonNull ButtonThemesWrapperDto> buttons() {
+        ButtonThemesWrapperDto buttons = buttonStyleService.randomButtons();
+        return ResponseEntity.ok(buttons);
     }
 
 }

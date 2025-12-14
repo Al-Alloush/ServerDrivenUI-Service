@@ -1,12 +1,11 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.impl;
 
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorThemeWrapperDto;
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ThemePalette;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorMainPalette;
 import org.springframework.stereotype.Service;
 
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
 
-import java.util.List;
 import java.util.Random;
 
 @Service
@@ -28,7 +27,7 @@ public class RandomColorPaletteService implements ColorPaletteService {
         String secondaryDark = randomHexColor();
         String secondaryDarkText = randomTextContrast(secondary);
         String tertiary = randomHexColor();
-        var light = new ThemePalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
+        var light = new ColorMainPalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
         dto.setLight(light);
 
         primary = randomHexColor();
@@ -38,7 +37,7 @@ public class RandomColorPaletteService implements ColorPaletteService {
         secondaryDark = randomHexColor();
         secondaryDarkText = randomTextContrast(secondary);
         tertiary = randomHexColor();
-        var dark = new ThemePalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
+        var dark = new ColorMainPalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
         dto.setDark(dark);
         return dto;
     }

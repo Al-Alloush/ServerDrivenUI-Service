@@ -3,22 +3,22 @@ package dev.codexo.app.srv.serverdrivenui.imeterrecorder.model;
 
 public class ColorThemeWrapperDto {
 
-    private ThemePalette light;
-    private ThemePalette dark;
+    private ColorMainPalette light;
+    private ColorMainPalette dark;
 
-    public ThemePalette getDark() {
+    public ColorMainPalette getDark() {
         return dark;
     }
 
-    public void setDark(ThemePalette dark) {
+    public void setDark(ColorMainPalette dark) {
         this.dark = dark;
     }
 
-    public ThemePalette getLight() {
+    public ColorMainPalette getLight() {
         return light;
     }
 
-    public void setLight(ThemePalette light) {
+    public void setLight(ColorMainPalette light) {
         this.light = light;
     }
 }

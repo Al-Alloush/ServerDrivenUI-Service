@@ -1,7 +1,7 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.model;
 
 
-public class ThemePalette {
+public class ColorMainPalette {
 
     private String primary;
     private String primaryColor;
@@ -12,9 +12,9 @@ public class ThemePalette {
     private String secondaryDarkText;
     private String tertiary;
 
-    public ThemePalette(String primary, String primaryDark, String primaryDarkText,
-                        String secondary, String secondaryDark, String secondaryDarkText,
-                        String tertiary) {
+    public ColorMainPalette(String primary, String primaryDark, String primaryDarkText,
+                            String secondary, String secondaryDark, String secondaryDarkText,
+                            String tertiary) {
         this.primary = primary;
         this.primaryColor = primary;
         this.primaryDark = primaryDark;

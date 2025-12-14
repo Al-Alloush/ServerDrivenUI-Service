@@ -1,9 +1,10 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.service;
 
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonThemesWrapperDto;
+
 import java.util.List;
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonStyle;
 
 public interface ButtonStyleService {
-    List<ButtonStyle> randomButtons();
+    ButtonThemesWrapperDto randomButtons();
 }
 
