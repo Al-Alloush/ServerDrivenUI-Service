@@ -14,6 +14,8 @@ public class ThemePalette {
     private String secondaryDarkText;
     private String tertiary;
 
+    public ThemePalette() {}
+
     public ThemePalette(String primary, String primaryDark, String primaryDarkText,
                         String secondary, String secondaryDark, String secondaryDarkText,
                         String tertiary) {
