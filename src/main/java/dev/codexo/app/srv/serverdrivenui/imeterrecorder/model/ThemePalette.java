@@ -1,8 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.model;
 
-import lombok.Data;
 
-@Data
 public class ThemePalette {
 
     private String primary;
