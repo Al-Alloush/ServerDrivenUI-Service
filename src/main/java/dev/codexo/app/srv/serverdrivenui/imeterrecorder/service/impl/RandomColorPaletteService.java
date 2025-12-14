@@ -1,10 +1,12 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.impl;
 
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorThemeWrapperDto;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ThemePalette;
 import org.springframework.stereotype.Service;
 
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorPalette;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -13,9 +15,12 @@ public class RandomColorPaletteService implements ColorPaletteService {
     private final Random random = new Random();
 
     @Override
-    public ColorPalette randomPalette() {
+    public ColorThemeWrapperDto randomPalette() {
         // The user requested initial specific values; but they also asked subsequent calls change randomly.
         // We'll generate colors but bias towards visible palettes. Also include possibility to return fixed example.
+
+        var dto = new ColorThemeWrapperDto();
+
         String primary = randomHexColor();
         String primaryDark = lightenOrDarken(primary, -40);
         String primaryDarkText = randomTextContrast(primary);
@@ -23,8 +28,19 @@ public class RandomColorPaletteService implements ColorPaletteService {
         String secondaryDark = randomHexColor();
         String secondaryDarkText = randomTextContrast(secondary);
         String tertiary = randomHexColor();
+        var light = new ThemePalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
+        dto.setLight(light);
 
-        return new ColorPalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
+        primary = randomHexColor();
+        primaryDark = lightenOrDarken(primary, -40);
+        primaryDarkText = randomTextContrast(primary);
+        secondary = randomHexColor();
+        secondaryDark = randomHexColor();
+        secondaryDarkText = randomTextContrast(secondary);
+        tertiary = randomHexColor();
+        var dark = new ThemePalette(primary, primaryDark, primaryDarkText, secondary,secondaryDark, secondaryDarkText, tertiary);
+        dto.setDark(dark);
+        return dto;
     }
 
     private String randomHexColor() {

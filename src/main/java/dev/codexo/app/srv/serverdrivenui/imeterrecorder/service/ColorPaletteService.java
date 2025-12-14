@@ -1,8 +1,8 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.service;
 
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorPalette;
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorThemeWrapperDto;
 
 public interface ColorPaletteService {
-    ColorPalette randomPalette();
+    ColorThemeWrapperDto randomPalette();
 }
 

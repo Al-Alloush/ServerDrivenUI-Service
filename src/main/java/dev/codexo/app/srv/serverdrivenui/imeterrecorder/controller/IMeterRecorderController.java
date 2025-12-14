@@ -1,12 +1,12 @@
 package dev.codexo.app.srv.serverdrivenui.imeterrecorder.controller;
 
+import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorThemeWrapperDto;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorPalette;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ButtonStyleService;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonStyle;
@@ -40,7 +40,7 @@ public class IMeterRecorderController {
 
     // Colors endpoint returning a randomized color palette
     @GetMapping("/colors")
-    public ResponseEntity<@NonNull ColorPalette> colors() {
+    public ResponseEntity<@NonNull ColorThemeWrapperDto> colors() {
         return ResponseEntity.ok(colorPaletteService.randomPalette());
     }
 
