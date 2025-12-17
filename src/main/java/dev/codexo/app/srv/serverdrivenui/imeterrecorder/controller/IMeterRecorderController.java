@@ -11,11 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
 import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ButtonStyleService;
 
-import java.util.List;
-import java.util.Map;
-
 @RestController
-@RequestMapping("/imeterrecorder")
+@RequestMapping("/srvdrivenui")
 public class IMeterRecorderController {
 
     private final ColorPaletteService colorPaletteService;

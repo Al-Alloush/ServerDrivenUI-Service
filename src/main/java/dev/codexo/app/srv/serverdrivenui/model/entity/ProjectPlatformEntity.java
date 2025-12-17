@@ -1,0 +1,68 @@
+package dev.codexo.app.srv.serverdrivenui.model.entity;
+
+import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.DotnetMauiCrossPlatformButtonStyleEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.DotnetMauiCrossPlatformLabelStyleEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactButtonStyleEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactLabelStyleEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+
+/**
+ * Connects a Project with a specific Platform (e.g. "iMeterRecorder" + ".NET MAUI").
+ * All platform-specific style tables hang off this entity.
+ */
+@Entity
+@Table(
+        name = "project_platform",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_project_platform_projectid_platformid",
+                        columnNames = {"project_id", "platform_id"}
+                )
+        }
+)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProjectPlatformEntity {
+
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    @Column(length = 36)
+    private String id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "project_id", nullable = false)
+    private ProjectEntity project;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "platform_id", nullable = false)
+    private PlatformEntity platform;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean active;
+
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
+
+    // .NET MAUI styles
+    @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<DotnetMauiCrossPlatformButtonStyleEntity> dotnetMauiButtonStyles;
+
+    @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<DotnetMauiCrossPlatformLabelStyleEntity> dotnetMauiLabelStyles;
+
+    // React styles
+    @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReactButtonStyleEntity> reactButtonStyles;
+
+    @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReactLabelStyleEntity> reactLabelStyles;
+}
