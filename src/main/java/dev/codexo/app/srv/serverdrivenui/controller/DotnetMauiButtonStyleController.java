@@ -3,7 +3,8 @@ package dev.codexo.app.srv.serverdrivenui.controller;
 
 import dev.codexo.app.srv.serverdrivenui.model.dto.dotnetmaui.DotnetMauiButtonThemeWrapperDto;
 import dev.codexo.app.srv.serverdrivenui.service.DotnetMauiStyleQueryService;
-import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/imeterrecorder/style")
-@RequiredArgsConstructor
 public class DotnetMauiButtonStyleController {
 
     private final DotnetMauiStyleQueryService styleQueryService;
+
+    public DotnetMauiButtonStyleController(DotnetMauiStyleQueryService styleQueryService) {
+        this.styleQueryService = styleQueryService;
+    }
+
+    // Health check endpoint
+    @GetMapping("/ping")
+    public ResponseEntity<@NonNull String> ping() {
+        return ResponseEntity.ok("DotnetMauiButtonStyleController is alive!");
+    }
 
     /**
      * Returns all button styles for the "imeterrecorder" project and

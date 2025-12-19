@@ -11,7 +11,6 @@ import dev.codexo.app.srv.serverdrivenui.repository.DotnetMauiCrossPlatformButto
 import dev.codexo.app.srv.serverdrivenui.repository.PlatformRepository;
 import dev.codexo.app.srv.serverdrivenui.repository.ProjectPlatformRepository;
 import dev.codexo.app.srv.serverdrivenui.repository.ProjectRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ import java.util.List;
  *     expected by the MAUI client.
  */
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DotnetMauiStyleQueryService {
 
@@ -43,6 +41,13 @@ public class DotnetMauiStyleQueryService {
     private final PlatformRepository platformRepository;
     private final ProjectPlatformRepository projectPlatformRepository;
     private final DotnetMauiCrossPlatformButtonStyleRepository buttonStyleRepository;
+
+    public DotnetMauiStyleQueryService(ProjectRepository projectRepository, PlatformRepository platformRepository, ProjectPlatformRepository projectPlatformRepository, DotnetMauiCrossPlatformButtonStyleRepository buttonStyleRepository) {
+        this.projectRepository = projectRepository;
+        this.platformRepository = platformRepository;
+        this.projectPlatformRepository = projectPlatformRepository;
+        this.buttonStyleRepository = buttonStyleRepository;
+    }
 
     /**
      * Returns all .NET MAUI button styles for the given project slug.
