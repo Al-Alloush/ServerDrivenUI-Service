@@ -15,7 +15,8 @@ import lombok.*;
  *   "borderWidth": 1
  * }
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

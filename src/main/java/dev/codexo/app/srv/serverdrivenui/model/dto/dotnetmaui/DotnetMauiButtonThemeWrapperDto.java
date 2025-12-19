@@ -14,7 +14,8 @@ import java.util.List;
  *   "dark":  [ ... ]
  * }
  */
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
