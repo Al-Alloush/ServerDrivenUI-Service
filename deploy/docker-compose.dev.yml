@@ -32,10 +32,10 @@ services:
       - "traefik.http.services.serverdrivenui-api.loadbalancer.server.port=8080"
 
       # Health check
-      - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.path=/imeterrecorder/ping"
+      - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.path=/srvdrivenui/ping"
       - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.interval=30s"
 
-      # CORS middleware for API access (uncomment if needed)
+      # CORS middleware for API access (uncomment if needed) we need to allow codexo.dev domain to access the API.
       #- "traefik.http.middlewares.cors-api.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS"
       #- "traefik.http.middlewares.cors-api.headers.accesscontrolalloworiginlist=https://codexo.dev,https://*.codexo.dev"
       #- "traefik.http.middlewares.cors-api.headers.accesscontrolallowheaders=Content-Type,Authorization,X-Requested-With"
@@ -43,7 +43,7 @@ services:
       #- "traefik.http.routers.serverdrivenui-api.middlewares=cors-api"
     
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/imeterrecorder/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/srvdrivenui/ping"]
       interval: 30s
       timeout: 10s
       retries: 3

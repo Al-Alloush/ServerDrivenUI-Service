@@ -23,7 +23,7 @@ services:
       - "traefik.http.services.serverdrivenui-api.loadbalancer.server.port=8080"
       
       # Health check
-      - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.path=/imeterrecorder/ping"
+      - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.path=/srvdrivenui/ping"
       - "traefik.http.services.serverdrivenui-api.loadbalancer.healthcheck.interval=30s"
       
       # CORS middleware for API access
@@ -36,7 +36,7 @@ services:
       - "traefik.http.routers.serverdrivenui-api.middlewares=cors-api"
     
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/imeterrecorder/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/srvdrivenui/ping"]
       interval: 30s
       timeout: 10s
       retries: 3
