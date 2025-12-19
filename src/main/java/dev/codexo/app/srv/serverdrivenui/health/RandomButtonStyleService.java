@@ -1,8 +1,5 @@
-package dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.impl;
+package dev.codexo.app.srv.serverdrivenui.health;
 
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonStylesDto;
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ButtonThemesWrapperDto;
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ButtonStyleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,10 +1,6 @@
-package dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.impl;
+package dev.codexo.app.srv.serverdrivenui.health;
 
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorThemeWrapperDto;
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.model.ColorMainPalette;
 import org.springframework.stereotype.Service;
-
-import dev.codexo.app.srv.serverdrivenui.imeterrecorder.service.ColorPaletteService;
 
 import java.util.Random;
 
