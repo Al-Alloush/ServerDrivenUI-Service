@@ -15,18 +15,18 @@ services:
       - "traefik.docker.network=proxy"
 
       # HTTP Router for local testing
-      - "traefik.http.routers.serverdrivenui-local.rule=Host(`localhost`) && PathPrefix(`/srvdrivenui`)"
+      - "traefik.http.routers.serverdrivenui-local.rule=Host(`localhost`) && PathPrefix(`/health`)"
       - "traefik.http.routers.serverdrivenui-local.entrypoints=web"
 
       # Service configuration
       - "traefik.http.services.serverdrivenui-local.loadbalancer.server.port=8080"
 
       # Health check
-      - "traefik.http.services.serverdrivenui-local.loadbalancer.healthcheck.path=/srvdrivenui/ping"
+      - "traefik.http.services.serverdrivenui-local.loadbalancer.healthcheck.path=/health/ping"
       - "traefik.http.services.serverdrivenui-local.loadbalancer.healthcheck.interval=30s"
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/srvdrivenui/ping"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
       interval: 30s
       timeout: 10s
       retries: 3
