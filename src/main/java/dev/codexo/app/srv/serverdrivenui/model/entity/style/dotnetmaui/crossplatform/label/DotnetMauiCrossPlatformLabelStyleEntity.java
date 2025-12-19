@@ -1,4 +1,4 @@
-package dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform;
+package dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.label;
 
 import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
 import jakarta.persistence.*;

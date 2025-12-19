@@ -75,7 +75,7 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
      * Default button text.
      * XAML: <Setter Property="Text" Value="Click me" />.
      */
-    @Column(name = "default_text", length = 255)
+    @Column(name = "default_text")
     private String defaultText;
 
     /**
@@ -130,6 +130,42 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
     private String backgroundColorDarkCustom;
 
     /**
+     * Background color token: PRIMARY, SECONDARY, TERTIARY, CUSTOM, ...
+     */
+    @Column(name = "background_color_token", nullable = false, length = 32)
+    private String backgroundColorToken;
+
+    /**
+     * Custom background color (hex) when token == "CUSTOM".
+     */
+    @Column(name = "background_color_custom", length = 16)
+    private String backgroundColorCustom;
+
+    /**
+     * Text color token: PRIMARY, SECONDARY, TERTIARY, CUSTOM, ...
+     */
+    @Column(name = "text_color_token", nullable = false, length = 32)
+    private String textColorToken;
+
+    /**
+     * Custom text color (hex) when token == "CUSTOM".
+     */
+    @Column(name = "text_color_custom", length = 16)
+    private String textColorCustom;
+
+    /**
+     * Border color token (optional).
+     */
+    @Column(name = "border_color_token", length = 32)
+    private String borderColorToken;
+
+    /**
+     * Custom border color (hex) when token == "CUSTOM".
+     */
+    @Column(name = "border_color_custom", length = 16)
+    private String borderColorCustom;
+
+    /**
      * Base opacity (0..1).
      * XAML: <Setter Property="Opacity" Value="1" />.
      */
@@ -167,7 +203,7 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
      * Custom font family name when token == "CUSTOM".
      * XAML: "OpenSansRegular".
      */
-    @Column(name = "font_family_custom", length = 255)
+    @Column(name = "font_family_custom")
     private String fontFamilyCustom;
 
     /**
@@ -308,7 +344,7 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
      * XAML: <Setter Property="BorderWidth" Value="1" />.
      */
     @Column(name = "border_width")
-    private Double borderWidth;
+    private Integer borderWidth;
 
     /**
      * Corner radius to round button edges.
@@ -334,7 +370,7 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
      * Icon shown inside the button.
      * XAML: <Setter Property="ImageSource" Value="icon_save.png" />.
      */
-    @Column(name = "image_source", length = 255)
+    @Column(name = "image_source")
     private String imageSource;
 
     /**
