@@ -1,6 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.model.entity;
 
-import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.DotnetMauiCrossPlatformButtonStyleEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button.DotnetMauiCrossPlatformButtonStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.DotnetMauiCrossPlatformLabelStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactButtonStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactLabelStyleEntity;
