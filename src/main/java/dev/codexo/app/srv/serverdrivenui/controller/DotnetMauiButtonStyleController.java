@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  *   GET <a href="https://srvdrvnui-dev.codexo.dev/imeterrecorder/style/buttons">...</a>
  */
 @RestController
-@RequestMapping("/imeterrecorder/style")
+@RequestMapping("/style")
 public class DotnetMauiButtonStyleController {
 
     private final DotnetMauiStyleQueryService styleQueryService;
@@ -46,7 +46,7 @@ public class DotnetMauiButtonStyleController {
      *   "dark":  [ { ...button style... }, ... ]
      * }
      */
-    @GetMapping("/buttons")
+    @GetMapping("/dotnetmaui/imeterrecorder/buttons")
     public DotnetMauiButtonThemeWrapperDto getButtonsForImeterRecorder() {
         return styleQueryService.getButtonStylesForProjectSlug("imeterrecorder");
     }
