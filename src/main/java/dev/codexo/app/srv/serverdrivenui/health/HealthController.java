@@ -21,7 +21,7 @@ public class HealthController {
     // Health check endpoint
     @GetMapping("/ping")
     public ResponseEntity<@NonNull String> ping() {
-        return ResponseEntity.ok("Health controller is alive");
+        return ResponseEntity.ok("Health controller is alive!");
     }
     
     // API info endpoint  
