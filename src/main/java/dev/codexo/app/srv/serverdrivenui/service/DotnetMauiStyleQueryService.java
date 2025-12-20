@@ -155,6 +155,7 @@ public class DotnetMauiStyleQueryService {
         }
 
         return DotnetMauiButtonStyleDto.builder()
+                .id(entity.getId())
                 .key(entity.getStyleKey())
                 // Appearance
                 .text(appearance != null ? appearance.getText() : null)

@@ -1,13 +1,13 @@
 package dev.codexo.app.srv.serverdrivenui.controller;
 
 
+import dev.codexo.app.srv.serverdrivenui.model.dto.dotnetmaui.DotnetMauiButtonStyleUpdateDto;
 import dev.codexo.app.srv.serverdrivenui.model.dto.dotnetmaui.DotnetMauiButtonThemeWrapperDto;
+import dev.codexo.app.srv.serverdrivenui.service.DotnetMauiButtonStyleUpdateService;
 import dev.codexo.app.srv.serverdrivenui.service.DotnetMauiStyleQueryService;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Exposes SDUI styles for the iMeterRecorder .NET MAUI client.
@@ -24,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class DotnetMauiButtonStyleController {
 
     private final DotnetMauiStyleQueryService styleQueryService;
+    private final DotnetMauiButtonStyleUpdateService buttonStyleUpdateService;
 
-    public DotnetMauiButtonStyleController(DotnetMauiStyleQueryService styleQueryService) {
+    public DotnetMauiButtonStyleController(DotnetMauiStyleQueryService styleQueryService, DotnetMauiButtonStyleUpdateService buttonStyleUpdateService) {
         this.styleQueryService = styleQueryService;
+        this.buttonStyleUpdateService = buttonStyleUpdateService;
     }
 
     // Health check endpoint
@@ -50,4 +52,17 @@ public class DotnetMauiButtonStyleController {
     public DotnetMauiButtonThemeWrapperDto getButtonsForImeterRecorder() {
         return styleQueryService.getButtonStylesForProjectSlug("imeterrecorder");
     }
+
+    @PutMapping("/dotnetmaui/imeterrecorder/buttons/{buttonId}")
+    public ResponseEntity<String> updateButtonStyle(
+            @PathVariable String buttonId,
+            @RequestBody DotnetMauiButtonStyleUpdateDto updateDto
+    ) {
+        var response = buttonStyleUpdateService.updateButtonStyle(buttonId, updateDto);
+        if (response != null) {
+            return ResponseEntity.ok("Button style updated successfully: " + response.getId());
+        }
+        return ResponseEntity.status(500).body("Failed to update button style.");
+    }
+
 }
