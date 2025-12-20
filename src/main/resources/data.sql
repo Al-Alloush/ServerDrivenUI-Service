@@ -271,3 +271,233 @@ INSERT INTO dotnet_maui_button_style (
              'Double tap to activate',
              CURRENT_TIMESTAMP
          );
+
+-- Shadow for Primary Button
+INSERT INTO dotnet_maui_button_shadow (
+    id,
+    button_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'd1e2f3a4-b5c6-47d8-89e0-aaaaaaaaaaaa',
+             'bdfc7632-35c7-4a9c-852c-888888888888',
+             '#000000',
+             0.3,
+             8.0,
+             '0,4',
+             CURRENT_TIMESTAMP
+         );
+
+-- Shadow for Secondary Button
+INSERT INTO dotnet_maui_button_shadow (
+    id,
+    button_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'e2f3a4b5-c6d7-48e9-90f1-bbbbbbbbbbbb',
+             'c3dbc5af-6658-4d86-94d9-999999999999',
+             '#000000',
+             0.2,
+             6.0,
+             '0,3',
+             CURRENT_TIMESTAMP
+         );
+
+-- Visual states for Primary Button
+-- Normal state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'f1a2b3c4-d5e6-47f8-90a1-cccccccccccc',
+             'bdfc7632-35c7-4a9c-852c-888888888888',
+             'Normal',
+             1.0,
+             '#FFFFFF',
+             '#26c998',
+             '#26c998'
+         );
+
+-- Disabled state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'f2b3c4d5-e6f7-48a9-91b2-dddddddddddd',
+             'bdfc7632-35c7-4a9c-852c-888888888888',
+             'Disabled',
+             0.5,
+             '#999999',
+             '#CCCCCC',
+             '#CCCCCC'
+         );
+
+-- PointerOver state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'f3c4d5e6-f7a8-49b0-92c3-eeeeeeeeeeee',
+             'bdfc7632-35c7-4a9c-852c-888888888888',
+             'PointerOver',
+             1.0,
+             '#FFFFFF',
+             '#1fb582',
+             '#1fb582'
+         );
+
+-- Pressed state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'f4d5e6f7-a8b9-40c1-93d4-ffffffffffff',
+             'bdfc7632-35c7-4a9c-852c-888888888888',
+             'Pressed',
+             0.9,
+             '#FFFFFF',
+             '#18a06d',
+             '#18a06d'
+         );
+
+-- Visual states for Secondary Button
+-- Normal state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'a1b2c3d4-e5f6-47a8-90b9-111111111112',
+             'c3dbc5af-6658-4d86-94d9-999999999999',
+             'Normal',
+             1.0,
+             '#FFFFFF',
+             '#444dcf',
+             '#444dcf'
+         );
+
+-- Disabled state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'a2c3d4e5-f6a7-48b9-91c0-222222222223',
+             'c3dbc5af-6658-4d86-94d9-999999999999',
+             'Disabled',
+             0.5,
+             '#999999',
+             '#CCCCCC',
+             '#CCCCCC'
+         );
+
+-- PointerOver state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'a3d4e5f6-a7b8-49c0-92d1-333333333334',
+             'c3dbc5af-6658-4d86-94d9-999999999999',
+             'PointerOver',
+             1.0,
+             '#FFFFFF',
+             '#3640b8',
+             '#3640b8'
+         );
+
+-- Pressed state
+INSERT INTO dotnet_maui_button_visual_state (
+    id,
+    button_style_id,
+    name,
+    opacity,
+    text_color,
+    background_color,
+    border_color
+) VALUES (
+             'a4e5f6a7-b8c9-40d1-93e2-444444444445',
+             'c3dbc5af-6658-4d86-94d9-999999999999',
+             'Pressed',
+             0.9,
+             '#FFFFFF',
+             '#2833a1',
+             '#2833a1'
+         );
+
+-- Shadow for Primary Button Normal state
+INSERT INTO dotnet_maui_button_visual_state_shadow (
+    id,
+    button_visual_status_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'b1c2d3e4-f5a6-47b8-90c1-aaaaaaaaaa11',
+             'f1a2b3c4-d5e6-47f8-90a1-cccccccccccc',
+             '#000000',
+             0.3,
+             8.0,
+             '0,4',
+             CURRENT_TIMESTAMP
+         );
+
+-- Shadow for Secondary Button Normal state
+INSERT INTO dotnet_maui_button_visual_state_shadow (
+    id,
+    button_visual_status_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'c2d3e4f5-a6b7-48c9-91d2-bbbbbbbbbb22',
+             'a1b2c3d4-e5f6-47a8-90b9-111111111112',
+             '#000000',
+             0.2,
+             6.0,
+             '0,3',
+             CURRENT_TIMESTAMP
+         );
