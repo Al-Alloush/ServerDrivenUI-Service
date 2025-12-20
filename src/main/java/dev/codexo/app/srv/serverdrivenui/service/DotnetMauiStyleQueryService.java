@@ -109,15 +109,93 @@ public class DotnetMauiStyleQueryService {
             DotnetMauiCrossPlatformButtonStyleEntity entity,
             BrandIdentityEntity brand
     ) {
+        // Map appearance
+        DotnetMauiCrossPlatformButtonStyleEntity.Appearance appearance = entity.getAppearance();
+        DotnetMauiCrossPlatformButtonStyleEntity.Typography typography = entity.getTypography();
+        DotnetMauiCrossPlatformButtonStyleEntity.Layout layout = entity.getLayout();
+        DotnetMauiCrossPlatformButtonStyleEntity.Border border = entity.getBorder();
+        DotnetMauiCrossPlatformButtonStyleEntity.Accessibility accessibility = entity.getAccessibility();
+
+        // Map shadow
+        DotnetMauiButtonStyleDto.ShadowDto shadowDto = null;
+        if (entity.getShadow() != null) {
+            shadowDto = DotnetMauiButtonStyleDto.ShadowDto.builder()
+                    .shadowBrush(entity.getShadow().getShadowBrush())
+                    .shadowOpacity(entity.getShadow().getShadowOpacity())
+                    .shadowRadius(entity.getShadow().getShadowRadius())
+                    .shadowOffset(entity.getShadow().getShadowOffsetX())
+                    .build();
+        }
+
+        // Map visual states
+        List<DotnetMauiButtonStyleDto.VisualStateDto> visualStates = null;
+        if (entity.getVisualStates() != null) {
+            visualStates = entity.getVisualStates().stream()
+                    .map(vs -> {
+                        DotnetMauiButtonStyleDto.ShadowDto vsShadow = null;
+                        if (vs.getShadow() != null) {
+                            vsShadow = DotnetMauiButtonStyleDto.ShadowDto.builder()
+                                    .shadowBrush(vs.getShadow().getShadowBrush())
+                                    .shadowOpacity(vs.getShadow().getShadowOpacity())
+                                    .shadowRadius(vs.getShadow().getShadowRadius())
+                                    .shadowOffset(vs.getShadow().getShadowOffsetX())
+                                    .build();
+                        }
+
+                        return DotnetMauiButtonStyleDto.VisualStateDto.builder()
+                                .name(vs.getName())
+                                .opacity(vs.getOpacity())
+                                .textColor(vs.getTextColor())
+                                .backgroundColor(vs.getBackgroundColor())
+                                .borderColor(vs.getBorderColor())
+                                .shadow(vsShadow)
+                                .build();
+                    })
+                    .toList();
+        }
+
         return DotnetMauiButtonStyleDto.builder()
                 .key(entity.getStyleKey())
-                .background(entity.getAppearance().getBackgroundColor())
-                .textColor(entity.getAppearance().getTextColor())
-                .borderColor(entity.getBorder().getBorderColor())
-                .cornerRadius(entity.getBorder().getCornerRadius())
-                .borderWidth(entity.getBorder().getBorderWidth())
+                // Appearance
+                .text(appearance != null ? appearance.getText() : null)
+                .textColor(appearance != null ? appearance.getTextColor() : null)
+                .backgroundColor(appearance != null ? appearance.getBackgroundColor() : null)
+                .opacity(appearance != null ? appearance.getOpacity() : null)
+                .isVisible(appearance != null ? appearance.isVisible() : null)
+                .isEnabled(appearance != null ? appearance.isEnabled() : null)
+                // Typography
+                .fontFamily(typography != null ? typography.getFontFamily() : null)
+                .fontSize(typography != null ? typography.getFontSize() : null)
+                .fontAttributes(typography != null ? typography.getFontAttributes() : null)
+                .characterSpacing(typography != null ? typography.getCharacterSpacing() : null)
+                .lineBreakMode(typography != null ? typography.getLineBreakMode() : null)
+                .textTransform(typography != null ? typography.getTextTransform() : null)
+                // Layout
+                .padding(layout != null ? layout.getPadding() : null)
+                .margin(layout != null ? layout.getMargin() : null)
+                .heightRequest(layout != null ? layout.getHeightRequest() : null)
+                .widthRequest(layout != null ? layout.getWidthRequest() : null)
+                .minimumHeightRequest(layout != null ? layout.getMinimumHeightRequest() : null)
+                .minimumWidthRequest(layout != null ? layout.getMinimumWidthRequest() : null)
+                .horizontalOptions(layout != null ? layout.getHorizontalOptions() : null)
+                .verticalOptions(layout != null ? layout.getVerticalOptions() : null)
+                .contentLayout(layout != null ? layout.getContentLayout() : null)
+                // Border
+                .borderColor(border != null ? border.getBorderColor() : null)
+                .borderWidth(border != null ? border.getBorderWidth() : null)
+                .cornerRadius(border != null ? border.getCornerRadius() : null)
+                // Image
+                .imageSource(entity.getImageSource())
+                // Shadow
+                .shadow(shadowDto)
+                // Accessibility
+                .semanticDescription(accessibility != null ? accessibility.getSemanticDescription() : null)
+                .semanticHint(accessibility != null ? accessibility.getSemanticHint() : null)
+                // Visual states
+                .visualStates(visualStates)
                 .build();
     }
+
 
 
 }

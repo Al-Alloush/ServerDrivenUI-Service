@@ -2,18 +2,11 @@ package dev.codexo.app.srv.serverdrivenui.model.dto.dotnetmaui;
 
 import lombok.*;
 
+import java.util.List;
+
 /**
  * Shape of a single MAUI button style as consumed by the client.
- * <p>
- * JSON example:
- * {
- *   "key": "PrimaryButton",
- *   "background": "#26c998",
- *   "textColor": "#ffffff",
- *   "borderColor": "#26c998",
- *   "cornerRadius": 8,
- *   "borderWidth": 1
- * }
+ * Maps to DotnetMauiCrossPlatformButtonStyleEntity with all properties.
  */
 @Getter
 @Setter
@@ -22,35 +15,76 @@ import lombok.*;
 @AllArgsConstructor
 public class DotnetMauiButtonStyleDto {
 
-    /**
-     * Logical style key used by the MAUI client
-     * (e.g. "PrimaryButton", "SecondaryButton").
-     */
     private String key;
 
-    /**
-     * Resolved background color in hex (#RRGGBB or #AARRGGBB).
-     * Tokens like PRIMARY / SECONDARY are already resolved on the server.
-     */
-    private String background;
-
-    /**
-     * Resolved text (foreground) color in hex.
-     */
+    // Appearance
+    private String text;
     private String textColor;
+    private String backgroundColor;
+    private Double opacity;
+    private Boolean isVisible;
+    private Boolean isEnabled;
 
-    /**
-     * Optional border color in hex.
-     */
+    // Typography
+    private String fontFamily;
+    private Double fontSize;
+    private String fontAttributes;
+    private Double characterSpacing;
+    private String lineBreakMode;
+    private String textTransform;
+
+    // Layout
+    private String padding;
+    private String margin;
+    private Double heightRequest;
+    private Double widthRequest;
+    private Double minimumHeightRequest;
+    private Double minimumWidthRequest;
+    private String horizontalOptions;
+    private String verticalOptions;
+    private String contentLayout;
+
+    // Border
     private String borderColor;
-
-    /**
-     * Corner radius in DIPs (device-independent pixels).
-     */
+    private Integer borderWidth;
     private Integer cornerRadius;
 
-    /**
-     * Border width in DIPs.
-     */
-    private Integer borderWidth;
+    // Image
+    private String imageSource;
+
+    // Shadow
+    private ShadowDto shadow;
+
+    // Accessibility
+    private String semanticDescription;
+    private String semanticHint;
+
+    // Visual states
+    private List<VisualStateDto> visualStates;
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ShadowDto {
+        private String shadowBrush;
+        private Float shadowOpacity;
+        private Float shadowRadius;
+        private String shadowOffset;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class VisualStateDto {
+        private String name;
+        private Double opacity;
+        private String textColor;
+        private String backgroundColor;
+        private String borderColor;
+        private ShadowDto shadow;
+    }
 }
