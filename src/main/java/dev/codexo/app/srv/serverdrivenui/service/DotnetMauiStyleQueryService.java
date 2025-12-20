@@ -111,43 +111,13 @@ public class DotnetMauiStyleQueryService {
     ) {
         return DotnetMauiButtonStyleDto.builder()
                 .key(entity.getStyleKey())
-                .background(resolveColor(entity.getBackgroundColorToken(),
-                        entity.getBackgroundColorCustom(),
-                        brand))
-                .textColor(resolveColor(entity.getTextColorToken(),
-                        entity.getTextColorCustom(),
-                        brand))
-                .borderColor(resolveColor(entity.getBorderColorToken(),
-                        entity.getBorderColorCustom(),
-                        brand))
-                .cornerRadius(entity.getCornerRadius())
-                .borderWidth(entity.getBorderWidth())
+                .background(entity.getAppearance().getBackgroundColor())
+                .textColor(entity.getAppearance().getTextColor())
+                .borderColor(entity.getBorder().getBorderColor())
+                .cornerRadius(entity.getBorder().getCornerRadius())
+                .borderWidth(entity.getBorder().getBorderWidth())
                 .build();
     }
 
-    /**
-     * Resolve a symbolic color token against the brand identity.
-     *
-     * @param token  e.g. PRIMARY, SECONDARY, TERTIARY, CUSTOM
-     * @param custom hex color used when token == CUSTOM
-     * @param brand  project's brand identity
-     * @return resolved hex color, or {@code null} if nothing usable is found
-     */
-    private static String resolveColor(
-            String token,
-            String custom,
-            BrandIdentityEntity brand
-    ) {
-        if (token == null || token.isBlank()) {
-            return custom;
-        }
 
-        return switch (token.toUpperCase()) {
-            case "PRIMARY"   -> brand.getPrimaryColor();
-            case "SECONDARY" -> brand.getSecondaryColor();
-            case "TERTIARY"  -> brand.getTertiaryColor();
-            case "CUSTOM"    -> custom;
-            default          -> custom;
-        };
-    }
 }

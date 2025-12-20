@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * Visual state override for a .NET MAUI cross-platform button.
@@ -18,8 +19,8 @@ import java.time.OffsetDateTime;
         name = "dotnet_maui_button_visual_state",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uk_maui_button_state_button_style_state_name",
-                        columnNames = {"button_style_id", "state_name"}
+                        name = "uk_maui_button_state_button_style_name",
+                        columnNames = {"button_style_id", "name"}
                 )
         }
 )
@@ -50,85 +51,24 @@ public class DotnetMauiCrossPlatformButtonVisualStateEntity {
      *  - "PointerOver"
      *  - "Pressed"
      */
-    @Column(name = "state_name", nullable = false, length = 50)
-    private String stateName;
-
-    // --------------------------- overrides ---------------------------- //
+    @Column(name = "name", nullable = false, length = 50)
+    private String name;
 
     /** Opacity override (0..1), e.g. Disabled → 0.5. */
     @Column(name = "opacity")
     private Double opacity;
 
-    // Background colors (Light/Dark)
+    @Column(name = "text_color", length = 128)
+    private String textColor;
 
-    @Column(name = "background_color_light_token", length = 32)
-    private String backgroundColorLightToken;
+    @Column(name = "background_color", length = 128)
+    private String backgroundColor;
 
-    @Column(name = "background_color_light_custom", length = 16)
-    private String backgroundColorLightCustom;
+    @Column(name = "border_color", length = 128)
+    private String borderColor;
 
-    @Column(name = "background_color_dark_token", length = 32)
-    private String backgroundColorDarkToken;
+    @OneToOne(mappedBy = "visualSateGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private DotnetMauiCrossPlatformButtonVisualStateShadowEntity shadow;
 
-    @Column(name = "background_color_dark_custom", length = 16)
-    private String backgroundColorDarkCustom;
 
-    // Text colors (Light/Dark)
-
-    @Column(name = "text_color_light_token", length = 32)
-    private String textColorLightToken;
-
-    @Column(name = "text_color_light_custom", length = 16)
-    private String textColorLightCustom;
-
-    @Column(name = "text_color_dark_token", length = 32)
-    private String textColorDarkToken;
-
-    @Column(name = "text_color_dark_custom", length = 16)
-    private String textColorDarkCustom;
-
-    // Border colors (Light/Dark)
-
-    @Column(name = "border_color_light_token", length = 32)
-    private String borderColorLightToken;
-
-    @Column(name = "border_color_light_custom", length = 16)
-    private String borderColorLightCustom;
-
-    @Column(name = "border_color_dark_token", length = 32)
-    private String borderColorDarkToken;
-
-    @Column(name = "border_color_dark_custom", length = 16)
-    private String borderColorDarkCustom;
-
-    /** Optional border width override. */
-    @Column(name = "border_width")
-    private Double borderWidth;
-
-    /** Optional corner radius override. */
-    @Column(name = "corner_radius")
-    private Integer cornerRadius;
-
-    /**
-     * Scale override for this state (e.g. 0.97 for Pressed).
-     */
-    @Column(name = "scale")
-    private Double scale;
-
-    // Simple shadow overrides
-
-    @Column(name = "shadow_opacity")
-    private Double shadowOpacity;
-
-    @Column(name = "shadow_radius")
-    private Double shadowRadius;
-
-    @Column(name = "shadow_offset_x")
-    private Double shadowOffsetX;
-
-    @Column(name = "shadow_offset_y")
-    private Double shadowOffsetY;
-
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
 }
