@@ -1,10 +1,6 @@
 -- ============================================================
 -- SUBSCRIPTION PLAN SETUP
 -- ============================================================
--- Defines the free tier subscription plan that limits users to
--- 1 project and 1 platform for 90 days
--- ============================================================
-
 INSERT INTO subscription_plan (
     id,
     code,
@@ -32,10 +28,6 @@ INSERT INTO subscription_plan (
 -- ============================================================
 -- DEMO USER SETUP
 -- ============================================================
--- Creates a demo user account that will own the iMeterRecorder
--- project. This user is linked to Keycloak for authentication.
--- ============================================================
-
 INSERT INTO users (
     id,
     keycloak_user_id,
@@ -53,10 +45,6 @@ INSERT INTO users (
 -- ============================================================
 -- USER SUBSCRIPTION ASSIGNMENT
 -- ============================================================
--- Assigns the FREE_3M subscription plan to the demo user
--- Status: ACTIVE means the subscription is currently valid
--- ============================================================
-
 INSERT INTO user_subscription (
     id,
     user_id,
@@ -71,18 +59,13 @@ INSERT INTO user_subscription (
              'b9d2b44c-2f58-4ff3-a71b-111111111111',
              'ACTIVE',
              CURRENT_TIMESTAMP,
-             NULL,  -- No expiration for demo purposes
+             NULL,
              CURRENT_TIMESTAMP
          );
 
 -- ============================================================
 -- PLATFORM DEFINITION
 -- ============================================================
--- Registers .NET MAUI as a supported platform in the system
--- Code: DOTNET_MAUI is used throughout the application to
--- identify this platform type
--- ============================================================
-
 INSERT INTO platform (
     id,
     code,
@@ -98,11 +81,6 @@ INSERT INTO platform (
 -- ============================================================
 -- PROJECT SETUP
 -- ============================================================
--- Creates the iMeterRecorder project owned by the demo user
--- Slug: 'imeterrecorder' is used in API URLs like:
---   /dotnetmaui/style/imeterrecorder/buttons
--- ============================================================
-
 INSERT INTO project (
     id,
     user_id,
@@ -126,19 +104,14 @@ INSERT INTO project (
 -- ============================================================
 -- BRAND IDENTITY
 -- ============================================================
--- Defines the visual brand identity for the iMeterRecorder app
--- Colors, fonts, and logo that define the app's look and feel
--- These values can be referenced by style definitions
--- ============================================================
-
 INSERT INTO brand_identity (
     id,
     project_id,
     brand_name,
-    primary_color,      -- Main brand color: teal/green
-    secondary_color,    -- Accent color: purple/blue
-    tertiary_color,     -- Third accent: dark purple
-    font_family,        -- Default font across the app
+    primary_color,
+    secondary_color,
+    tertiary_color,
+    font_family,
     logo_url,
     description,
     created_at
@@ -158,10 +131,6 @@ INSERT INTO brand_identity (
 -- ============================================================
 -- PROJECT-PLATFORM ASSOCIATION
 -- ============================================================
--- Links the iMeterRecorder project to the .NET MAUI platform
--- is_active: TRUE means this platform is enabled for the project
--- ============================================================
-
 INSERT INTO project_platform (
     id,
     project_id,
@@ -179,17 +148,12 @@ INSERT INTO project_platform (
 -- ============================================================
 -- THEME DEFINITIONS
 -- ============================================================
--- Creates Light and Dark themes for the iMeterRecorder app
--- Each theme will have its own set of button styles
--- ============================================================
-
--- Light Theme (Default)
 INSERT INTO platform_theme (
     id,
     project_platform_id,
     theme_name,
     display_name,
-    is_default,          -- This is the default theme
+    is_default,
     description,
     created_at
 ) VALUES (
@@ -202,13 +166,12 @@ INSERT INTO platform_theme (
              CURRENT_TIMESTAMP
          );
 
--- Dark Theme
 INSERT INTO platform_theme (
     id,
     project_platform_id,
     theme_name,
     display_name,
-    is_default,          -- Not the default theme
+    is_default,
     description,
     created_at
 ) VALUES (
@@ -224,58 +187,42 @@ INSERT INTO platform_theme (
 -- ============================================================
 -- BUTTON STYLE DEFINITIONS
 -- ============================================================
--- Each button style defines the complete visual appearance
--- and behavior of a button in the MAUI application
--- Grouped by: Theme (Light/Dark) and Type (Primary/Secondary)
--- ============================================================
 
--- ------------------------------------------------------------
--- LIGHT THEME - Primary Button
--- ------------------------------------------------------------
--- Main call-to-action button for light theme
--- Uses brand colors with white text on teal background
--- ------------------------------------------------------------
-
+-- Light Theme - Primary Button
 INSERT INTO dotnet_maui_button_style (
     id,
-    theme_id,                    -- Links to Light theme
-    style_key,                   -- Identifier used in XAML/code
-    -- Appearance properties
-    text,                        -- Default button text
-    text_color,                  -- White text
-    background_color,            -- Blue background
-    opacity,                     -- Fully opaque
-    is_visible,                  -- Initially visible
-    is_enabled,                  -- Initially enabled
-    -- Typography properties
-    font_family,                 -- Uses brand font
-    font_size,                   -- 16pt text
-    font_attributes,             -- Bold text
-    character_spacing,           -- No extra spacing
-    line_break_mode,             -- Don't wrap text
-    text_transform,              -- No case transformation
-    -- Layout properties
-    padding,                     -- Internal spacing: 16px horizontal, 10px vertical
-    margin,                      -- No external margin
-    height_request,              -- -1 = auto height
-    width_request,               -- -1 = auto width
-    min_height_request,          -- Minimum 44px for touch targets
-    min_width_request,           -- Minimum 44px for touch targets
-    horizontal_options,          -- Fill available horizontal space
-    vertical_options,            -- Center vertically
-    content_layout,              -- Icon/content position: Left with 10px spacing
-    -- Border properties
-    border_color,                -- Teal border matches brand
-    border_width,                -- 1px border
-    corner_radius,               -- 8px rounded corners
-    -- Image properties
-    image_source,                -- Icon file name
-    -- Accessibility properties
-    semantic_description,        -- Screen reader description
-    semantic_hint,               -- Screen reader usage hint
+    theme_id,
+    style_key,
+    text,
+    text_color,
+    background_color,
+    opacity,
+    is_visible,
+    is_enabled,
+    font_family,
+    font_size,
+    font_attributes,
+    character_spacing,
+    line_break_mode,
+    text_transform,
+    padding,
+    margin,
+    height_request,
+    width_request,
+    min_height_request,
+    min_width_request,
+    horizontal_options,
+    vertical_options,
+    content_layout,
+    border_color,
+    border_width,
+    corner_radius,
+    image_source,
+    semantic_description,
+    semantic_hint,
     created_at
 ) VALUES (
-             'bdfc7632-LightPrimaryButton',
+             'bdfc7632-35c7-4a9c-852c-111111111111',
              'theme-light-111111111111',
              'PrimaryButton',
              'Primary Button',
@@ -308,53 +255,41 @@ INSERT INTO dotnet_maui_button_style (
              CURRENT_TIMESTAMP
          );
 
--- ------------------------------------------------------------
--- DARK THEME - Primary Button
--- ------------------------------------------------------------
--- Main call-to-action button for dark theme
--- Uses muted colors suitable for dark backgrounds
--- ------------------------------------------------------------
-
+-- Dark Theme - Primary Button
 INSERT INTO dotnet_maui_button_style (
     id,
-    theme_id,                    -- Links to Light theme
-    style_key,                   -- Identifier used in XAML/code
-    -- Appearance properties
-    text,                        -- Default button text
-    text_color,                  -- White text
-    background_color,            -- Blue background
-    opacity,                     -- Fully opaque
-    is_visible,                  -- Initially visible
-    is_enabled,                  -- Initially enabled
-    -- Typography properties
-    font_family,                 -- Uses brand font
-    font_size,                   -- 16pt text
-    font_attributes,             -- Bold text
-    character_spacing,           -- No extra spacing
-    line_break_mode,             -- Don't wrap text
-    text_transform,              -- No case transformation
-    -- Layout properties
-    padding,                     -- Internal spacing: 16px horizontal, 10px vertical
-    margin,                      -- No external margin
-    height_request,              -- -1 = auto height
-    width_request,               -- -1 = auto width
-    min_height_request,          -- Minimum 44px for touch targets
-    min_width_request,           -- Minimum 44px for touch targets
-    horizontal_options,          -- Fill available horizontal space
-    vertical_options,            -- Center vertically
-    content_layout,              -- Icon/content position: Left with 10px spacing
-    -- Border properties
-    border_color,                -- Teal border matches brand
-    border_width,                -- 1px border
-    corner_radius,               -- 8px rounded corners
-    -- Image properties
-    image_source,                -- Icon file name
-    -- Accessibility properties
-    semantic_description,        -- Screen reader description
-    semantic_hint,               -- Screen reader usage hint
+    theme_id,
+    style_key,
+    text,
+    text_color,
+    background_color,
+    opacity,
+    is_visible,
+    is_enabled,
+    font_family,
+    font_size,
+    font_attributes,
+    character_spacing,
+    line_break_mode,
+    text_transform,
+    padding,
+    margin,
+    height_request,
+    width_request,
+    min_height_request,
+    min_width_request,
+    horizontal_options,
+    vertical_options,
+    content_layout,
+    border_color,
+    border_width,
+    corner_radius,
+    image_source,
+    semantic_description,
+    semantic_hint,
     created_at
 ) VALUES (
-             'bdfc-DarPrButtonLightPrimaryButton',
+             'bdfc7632-35c7-4a9c-852c-222222222222',
              'theme-dark-222222222222',
              'PrimaryButton',
              'Primary Button',
@@ -387,30 +322,24 @@ INSERT INTO dotnet_maui_button_style (
              CURRENT_TIMESTAMP
          );
 
--- ------------------------------------------------------------
--- LIGHT THEME - Secondary Button
--- ------------------------------------------------------------
--- Less prominent action button for light theme
--- Uses darker green background with white text
--- ------------------------------------------------------------
-
+-- Light Theme - Secondary Button
 INSERT INTO dotnet_maui_button_style (
     id,
     theme_id,
     style_key,
     text,
     text_color,
-    background_color,            -- Darker green
+    background_color,
     opacity,
     is_visible,
     is_enabled,
     font_family,
-    font_size,                   -- Slightly smaller: 14pt
-    font_attributes,             -- Normal weight (not bold)
+    font_size,
+    font_attributes,
     character_spacing,
     line_break_mode,
     text_transform,
-    padding,                     -- Less padding: 12x8
+    padding,
     margin,
     height_request,
     width_request,
@@ -418,16 +347,16 @@ INSERT INTO dotnet_maui_button_style (
     min_width_request,
     horizontal_options,
     vertical_options,
-    content_layout,              -- Icon with 8px spacing
-    border_color,                -- Purple border
+    content_layout,
+    border_color,
     border_width,
-    corner_radius,               -- Less rounded: 4px
-    image_source,                -- No icon
+    corner_radius,
+    image_source,
     semantic_description,
     semantic_hint,
     created_at
 ) VALUES (
-             'c3dbc5af-lightSecondaryButton',
+             'c3dbc5af-6658-4d86-9e11-333333333333',
              'theme-light-111111111111',
              'SecondaryButton',
              'Secondary Button',
@@ -460,20 +389,14 @@ INSERT INTO dotnet_maui_button_style (
              CURRENT_TIMESTAMP
          );
 
--- ------------------------------------------------------------
--- DARK THEME - Secondary Button
--- ------------------------------------------------------------
--- Less prominent action button for dark theme
--- Uses very dark green background with gray text
--- ------------------------------------------------------------
-
+-- Dark Theme - Secondary Button
 INSERT INTO dotnet_maui_button_style (
     id,
     theme_id,
     style_key,
     text,
-    text_color,                  -- Medium gray text
-    background_color,            -- Very dark green
+    text_color,
+    background_color,
     opacity,
     is_visible,
     is_enabled,
@@ -500,7 +423,7 @@ INSERT INTO dotnet_maui_button_style (
     semantic_hint,
     created_at
 ) VALUES (
-             'c3dbc5af-6658-4d86-d99999999999',
+             'c3dbc5af-6658-4d86-9e11-444444444444',
              'theme-dark-222222222222',
              'SecondaryButton',
              'Secondary Button',
@@ -536,23 +459,19 @@ INSERT INTO dotnet_maui_button_style (
 -- ============================================================
 -- BUTTON SHADOWS
 -- ============================================================
--- Defines drop shadow effects for button styles
--- Each button style has one base shadow configuration
--- Format for offset: "x,y" where x=horizontal, y=vertical
--- ============================================================
 
 -- Light Primary Button Shadow
 INSERT INTO dotnet_maui_button_shadow (
     id,
-    button_style_id,             -- Links to Light Primary button
-    shadow_brush,                -- Black shadow
-    shadow_opacity,              -- 30% opacity
-    shadow_radius,               -- 8px blur radius
-    shadow_offset,               -- 0px right, 4px down
+    button_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
     created_at
 ) VALUES (
-             'd1e2f3-LightPrimaryButtonShadow',
-             'bdfc7632-LightPrimaryButton',
+             'd1e2f3a4-b5c6-47d8-89e0-111111111111',
+             'bdfc7632-35c7-4a9c-852c-111111111111',
              '#000000',
              0.3,
              8.0,
@@ -563,15 +482,15 @@ INSERT INTO dotnet_maui_button_shadow (
 -- Dark Primary Button Shadow
 INSERT INTO dotnet_maui_button_shadow (
     id,
-    button_style_id,             -- Links to Dark Primary button
-    shadow_brush,                -- Gray shadow (lighter for dark theme)
+    button_style_id,
+    shadow_brush,
     shadow_opacity,
     shadow_radius,
     shadow_offset,
     created_at
 ) VALUES (
-             'd1e2f-DarkPrimaryButtonShadow',
-             'bdfc-DarPrButtonLightPrimaryButton',
+             'd1e2f3a4-b5c6-47d8-89e0-222222222222',
+             'bdfc7632-35c7-4a9c-852c-222222222222',
              '#8c8c8c',
              0.3,
              8.0,
@@ -579,18 +498,18 @@ INSERT INTO dotnet_maui_button_shadow (
              CURRENT_TIMESTAMP
          );
 
--- Light Secondary Button Shadow (subtler than primary)
+-- Light Secondary Button Shadow
 INSERT INTO dotnet_maui_button_shadow (
     id,
     button_style_id,
     shadow_brush,
-    shadow_opacity,              -- 20% opacity (less prominent)
-    shadow_radius,               -- 6px blur (smaller)
-    shadow_offset,               -- 3px down (less distance)
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
     created_at
 ) VALUES (
-             'e2f3a4b5-c6d7-48e9-90f1-laaaaaaaaaaa',
-             'c3dbc5af-lightSecondaryButton',
+             'e2f3a4b5-c6d7-48e9-90f1-333333333333',
+             'c3dbc5af-6658-4d86-9e11-333333333333',
              '#000000',
              0.2,
              6.0,
@@ -608,8 +527,8 @@ INSERT INTO dotnet_maui_button_shadow (
     shadow_offset,
     created_at
 ) VALUES (
-             'e2f3a4b5-c6d7-48e9-90f1-lbbbbbbbbbbb',
-             'c3dbc5af-6658-4d86-d99999999999',
+             'e2f3a4b5-c6d7-48e9-90f1-444444444444',
+             'c3dbc5af-6658-4d86-9e11-444444444444',
              '#8c8c8c',
              0.2,
              6.0,
@@ -620,30 +539,19 @@ INSERT INTO dotnet_maui_button_shadow (
 -- ============================================================
 -- BUTTON VISUAL STATES
 -- ============================================================
--- Defines how buttons look in different interaction states:
---   - Normal: Default appearance
---   - Disabled: When button is not interactive
---   - PointerOver: Mouse hover or touch feedback
---   - Pressed: Active press/tap state
--- Each state can override colors, opacity, and other properties
--- ============================================================
 
--- ------------------------------------------------------------
--- LIGHT PRIMARY BUTTON - Visual States
--- ------------------------------------------------------------
-
--- Normal State (baseline appearance)
+-- Light Primary - Normal
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
-    name,                        -- State name used in MAUI
+    name,
     opacity,
     text_color,
-    background_color,            -- Brand teal
+    background_color,
     border_color
 ) VALUES (
              'f1a2b3c4-d5e6-47f8-89a0-111111111111',
-             'bdfc7632-LightPrimaryButton',
+             'bdfc7632-35c7-4a9c-852c-111111111111',
              'Normal',
              1.0,
              '#FFFFFF',
@@ -651,18 +559,18 @@ INSERT INTO dotnet_maui_button_visual_state (
              '#26c998'
          );
 
--- Disabled State (button cannot be interacted with)
+-- Light Primary - Disabled
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
     name,
-    opacity,                     -- 50% opacity to indicate disabled
-    text_color,                  -- Gray text
-    background_color,            -- Light gray background
+    opacity,
+    text_color,
+    background_color,
     border_color
 ) VALUES (
-             'f2b3c4d5-e6f7-48a9-91b2-lddddddddddd',
-             'bdfc7632-LightPrimaryButton',
+             'f2b3c4d5-e6f7-48a9-91b2-111111111111',
+             'bdfc7632-35c7-4a9c-852c-111111111111',
              'Disabled',
              0.5,
              '#999999',
@@ -670,18 +578,18 @@ INSERT INTO dotnet_maui_button_visual_state (
              '#CCCCCC'
          );
 
--- PointerOver State (hover/touch feedback)
+-- Light Primary - PointerOver
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
     name,
     opacity,
     text_color,
-    background_color,            -- Slightly darker teal
+    background_color,
     border_color
 ) VALUES (
-             'f3c4d5e6-f7a8-49b0-92c3-leeeeeeeeeee',
-             'bdfc7632-LightPrimaryButton',
+             'f3c4d5e6-f7a8-49b0-92c3-111111111111',
+             'bdfc7632-35c7-4a9c-852c-111111111111',
              'PointerOver',
              1.0,
              '#FFFFFF',
@@ -689,18 +597,18 @@ INSERT INTO dotnet_maui_button_visual_state (
              '#1fb582'
          );
 
--- Pressed State (active press/tap)
+-- Light Primary - Pressed
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
     name,
-    opacity,                     -- Slightly transparent for feedback
+    opacity,
     text_color,
-    background_color,            -- Even darker teal
+    background_color,
     border_color
 ) VALUES (
-             'f4d5e6f7-a8b9-40c1-93d4-lfffffffffff',
-             'bdfc7632-LightPrimaryButton',
+             'f4d5e6f7-a8b9-40c1-93d4-111111111111',
+             'bdfc7632-35c7-4a9c-852c-111111111111',
              'Pressed',
              0.9,
              '#FFFFFF',
@@ -708,22 +616,18 @@ INSERT INTO dotnet_maui_button_visual_state (
              '#18a06d'
          );
 
--- ------------------------------------------------------------
--- DARK PRIMARY BUTTON - Visual States
--- ------------------------------------------------------------
-
--- Normal State
+-- Dark Primary - Normal
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
     name,
     opacity,
-    text_color,                  -- Gray text for dark theme
-    background_color,            -- Dark red-brown
+    text_color,
+    background_color,
     border_color
 ) VALUES (
              'f1a2b3c4-d5e6-47f8-89a0-222222222222',
-             'bdfc-DarPrButtonLightPrimaryButton',
+             'bdfc7632-35c7-4a9c-852c-222222222222',
              'Normal',
              1.0,
              '#8c8c8c',
@@ -731,18 +635,18 @@ INSERT INTO dotnet_maui_button_visual_state (
              '#26c998'
          );
 
--- Disabled State
+-- Dark Primary - Disabled
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
     name,
     opacity,
-    text_color,                  -- Muted red-gray
-    background_color,            -- Very dark green
+    text_color,
+    background_color,
     border_color
 ) VALUES (
-             'f2b3c4d5-e6f7-48a9-91b2-dddddddddddd',
-             'bdfc-DarPrButtonLightPrimaryButton',
+             'f2b3c4d5-e6f7-48a9-91b2-222222222222',
+             'bdfc7632-35c7-4a9c-852c-222222222222',
              'Disabled',
              0.5,
              '#916e6e',
@@ -750,18 +654,18 @@ INSERT INTO dotnet_maui_button_visual_state (
              '#CCCCCC'
          );
 
--- PointerOver State
+-- Dark Primary - PointerOver
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
     name,
     opacity,
-    text_color,                  -- Blue-gray
-    background_color,            -- Dark blue
+    text_color,
+    background_color,
     border_color
 ) VALUES (
-             'f3c4d5e6-f7a8-49b0-92c3-deeeeeeeeeee',
-             'bdfc-DarPrButtonLightPrimaryButton',
+             'f3c4d5e6-f7a8-49b0-92c3-222222222222',
+             'bdfc7632-35c7-4a9c-852c-222222222222',
              'PointerOver',
              1.0,
              '#66848a',
@@ -769,18 +673,18 @@ INSERT INTO dotnet_maui_button_visual_state (
              '#1fb582'
          );
 
--- Pressed State
+-- Dark Primary - Pressed
 INSERT INTO dotnet_maui_button_visual_state (
     id,
     button_style_id,
     name,
     opacity,
-    text_color,                  -- Darker blue-gray
-    background_color,            -- Dark teal
+    text_color,
+    background_color,
     border_color
 ) VALUES (
-             'f4d5e6f7-a8b9-40c1-93d4-dfffffffffff',
-             'bdfc-DarPrButtonLightPrimaryButton',
+             'f4d5e6f7-a8b9-40c1-93d4-222222222222',
+             'bdfc7632-35c7-4a9c-852c-222222222222',
              'Pressed',
              0.9,
              '#517c85',
@@ -791,22 +695,18 @@ INSERT INTO dotnet_maui_button_visual_state (
 -- ============================================================
 -- VISUAL STATE SHADOWS
 -- ============================================================
--- Separate shadow configurations for specific visual states
--- Allows shadows to change during interactions (e.g., pressed
--- state might have a smaller shadow to simulate depth change)
--- ============================================================
 
--- Light Primary Button - Normal State Shadow
+-- Light Primary - Normal State Shadow
 INSERT INTO dotnet_maui_button_visual_state_shadow (
     id,
-    button_visual_status_style_id,  -- Links to Normal visual state
+    button_visual_status_style_id,
     shadow_brush,
     shadow_opacity,
     shadow_radius,
     shadow_offset,
     created_at
 ) VALUES (
-             'b1c2d3e4-f5a6-aaaaaaaaaa11',
+             'b1c2d3e4-f5a6-47b8-90c1-111111111111',
              'f1a2b3c4-d5e6-47f8-89a0-111111111111',
              '#000000',
              0.3,
@@ -815,17 +715,17 @@ INSERT INTO dotnet_maui_button_visual_state_shadow (
              CURRENT_TIMESTAMP
          );
 
--- Dark Primary Button - Normal State Shadow
+-- Dark Primary - Normal State Shadow
 INSERT INTO dotnet_maui_button_visual_state_shadow (
     id,
     button_visual_status_style_id,
-    shadow_brush,                   -- Lighter shadow for dark theme
+    shadow_brush,
     shadow_opacity,
     shadow_radius,
     shadow_offset,
     created_at
 ) VALUES (
-             'b1c2d3e4-f5a6-aaaaaaaaaa12',
+             'b1c2d3e4-f5a6-47b8-90c1-222222222222',
              'f1a2b3c4-d5e6-47f8-89a0-222222222222',
              '#696969',
              0.3,
@@ -833,20 +733,3 @@ INSERT INTO dotnet_maui_button_visual_state_shadow (
              '0,4',
              CURRENT_TIMESTAMP
          );
-
--- ============================================================
--- END OF SEED DATA
--- ============================================================
--- This script creates a complete demo environment with:
---   - 1 subscription plan (FREE_3M)
---   - 1 demo user
---   - 1 platform (.NET MAUI)
---   - 1 project (iMeterRecorder)
---   - 1 brand identity
---   - 2 themes (Light and Dark)
---   - 4 button styles (2 per theme: Primary and Secondary)
---   - 4 base shadows (1 per button style)
---   - 8 visual states (4 per Primary button: Normal, Disabled,
---     PointerOver, Pressed)
---   - 2 visual state shadows (for Normal states)
--- ============================================================
