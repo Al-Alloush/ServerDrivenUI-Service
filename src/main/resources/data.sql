@@ -551,7 +551,7 @@ INSERT INTO dotnet_maui_button_shadow (
     shadow_offset,               -- 0px right, 4px down
     created_at
 ) VALUES (
-             'd1e2f3a4-b5c6-47d8-89e0-LightPrimaryButtonShadow',
+             'd1e2f3-LightPrimaryButtonShadow',
              'bdfc7632-LightPrimaryButton',
              '#000000',
              0.3,
@@ -570,7 +570,7 @@ INSERT INTO dotnet_maui_button_shadow (
     shadow_offset,
     created_at
 ) VALUES (
-             'd1e2f3a4-b5c6-47d8-89e0-DarkPrimaryButtonShadow',
+             'd1e2f-DarkPrimaryButtonShadow',
              'bdfc-DarPrButtonLightPrimaryButton',
              '#8c8c8c',
              0.3,
@@ -642,7 +642,7 @@ INSERT INTO dotnet_maui_button_visual_state (
     background_color,            -- Brand teal
     border_color
 ) VALUES (
-             'f1a2b3c4-LightPrimaryButtonVisualStateNormal',
+             'f1a2b3c4-d5e6-47f8-89a0-111111111111',
              'bdfc7632-LightPrimaryButton',
              'Normal',
              1.0,
@@ -722,7 +722,7 @@ INSERT INTO dotnet_maui_button_visual_state (
     background_color,            -- Dark red-brown
     border_color
 ) VALUES (
-             'f1a2b3c4-DarkPrimaryButtonVisualStateNormal',
+             'f1a2b3c4-d5e6-47f8-89a0-222222222222',
              'bdfc-DarPrButtonLightPrimaryButton',
              'Normal',
              1.0,
@@ -806,8 +806,8 @@ INSERT INTO dotnet_maui_button_visual_state_shadow (
     shadow_offset,
     created_at
 ) VALUES (
-             'b1c2d3e4-f5a6-47b8-90c1-aaaaaaaaaa11',
-             'f1a2b3c4-LightPrimaryButtonVisualStateNormal',
+             'b1c2d3e4-f5a6-aaaaaaaaaa11',
+             'f1a2b3c4-d5e6-47f8-89a0-111111111111',
              '#000000',
              0.3,
              8.0,
@@ -825,8 +825,8 @@ INSERT INTO dotnet_maui_button_visual_state_shadow (
     shadow_offset,
     created_at
 ) VALUES (
-             'b1c2d3e4-f5a6-47b8-90c1-aaaaaaaaaa12',
-             'f1a2b3c4-DarkPrimaryButtonVisualStateNormal',
+             'b1c2d3e4-f5a6-aaaaaaaaaa12',
+             'f1a2b3c4-d5e6-47f8-89a0-222222222222',
              '#696969',
              0.3,
              8.0,
