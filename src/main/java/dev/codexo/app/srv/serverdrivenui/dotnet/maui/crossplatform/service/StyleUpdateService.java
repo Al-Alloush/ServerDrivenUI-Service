@@ -1,7 +1,7 @@
 package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service;
 
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.DotnetMauiButtonStyleDto;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.DotnetMauiButtonStyleUpdateDto;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleDto;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleUpdateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonShadowEntity;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonVisualStateEntity;
@@ -25,9 +25,9 @@ public class StyleUpdateService {
     }
 
     @Transactional
-    public DotnetMauiButtonStyleDto updateButtonStyle(
+    public ButtonStyleDto updateButtonStyle(
             String buttonId,
-            DotnetMauiButtonStyleUpdateDto updateDto
+            ButtonStyleUpdateDto updateDto
     ) {
         ButtonStyleEntity entity = buttonStyleRepository
                 .findById(buttonId)
@@ -115,8 +115,8 @@ public class StyleUpdateService {
     }
 
     // Add the same mapping methods from StyleQueryService
-    private DotnetMauiButtonStyleDto mapToDto(ButtonStyleEntity entity, BrandIdentityEntity brand) {
-        return DotnetMauiButtonStyleDto.builder()
+    private ButtonStyleDto mapToDto(ButtonStyleEntity entity, BrandIdentityEntity brand) {
+        return ButtonStyleDto.builder()
                 .id(entity.getId())
                 .key(entity.getStyleKey())
                 .text(entity.getAppearance() != null ? entity.getAppearance().getText() : null)
@@ -154,9 +154,9 @@ public class StyleUpdateService {
                 .build();
     }
 
-    private DotnetMauiButtonStyleDto.ShadowDto mapShadowToDto(ButtonShadowEntity shadow) {
+    private ButtonStyleDto.ShadowDto mapShadowToDto(ButtonShadowEntity shadow) {
         if (shadow == null) return null;
-        return DotnetMauiButtonStyleDto.ShadowDto.builder()
+        return ButtonStyleDto.ShadowDto.builder()
                 .shadowBrush(shadow.getShadowBrush())
                 .shadowOpacity(shadow.getShadowOpacity())
                 .shadowRadius(shadow.getShadowRadius())
@@ -164,8 +164,8 @@ public class StyleUpdateService {
                 .build();
     }
 
-    private DotnetMauiButtonStyleDto.VisualStateDto mapVisualStateToDto(ButtonVisualStateEntity state) {
-        return DotnetMauiButtonStyleDto.VisualStateDto.builder()
+    private ButtonStyleDto.VisualStateDto mapVisualStateToDto(ButtonVisualStateEntity state) {
+        return ButtonStyleDto.VisualStateDto.builder()
                 .name(state.getName())
                 .opacity(state.getOpacity())
                 .textColor(state.getTextColor())
@@ -175,9 +175,9 @@ public class StyleUpdateService {
                 .build();
     }
 
-    private DotnetMauiButtonStyleDto.ShadowDto mapVisualStateShadowToDto(ButtonVisualStateShadowEntity shadow) {
+    private ButtonStyleDto.ShadowDto mapVisualStateShadowToDto(ButtonVisualStateShadowEntity shadow) {
         if (shadow == null) return null;
-        return DotnetMauiButtonStyleDto.ShadowDto.builder()
+        return ButtonStyleDto.ShadowDto.builder()
                 .shadowBrush(shadow.getShadowBrush())
                 .shadowOpacity(shadow.getShadowOpacity())
                 .shadowRadius(shadow.getShadowRadius())

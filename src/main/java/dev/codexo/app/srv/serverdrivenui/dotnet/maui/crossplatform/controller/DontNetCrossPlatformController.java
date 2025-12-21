@@ -2,8 +2,8 @@ package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.controller;
 
 
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.ThemeWrapperDto;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.DotnetMauiButtonStyleDto;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.DotnetMauiButtonStyleUpdateDto;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleDto;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleUpdateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.StyleUpdateService;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.StyleQueryService;
 import org.jspecify.annotations.NonNull;
@@ -45,9 +45,9 @@ public class DontNetCrossPlatformController {
 
 
     @PutMapping("/imeterrecorder/buttons/{buttonId}")
-    public ResponseEntity<DotnetMauiButtonStyleDto> updateButtonstyle(
+    public ResponseEntity<ButtonStyleDto> updateButtonstyle(
             @PathVariable String buttonId,
-            @RequestBody DotnetMauiButtonStyleUpdateDto updateDto
+            @RequestBody ButtonStyleUpdateDto updateDto
     ) {
         var response = buttonStyleUpdateService.updateButtonStyle(buttonId, updateDto);
         return ResponseEntity.ok(response);
