@@ -1,4 +1,4 @@
-package dev.codexo.app.srv.serverdrivenui.model.dto.dotnetmaui;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button;
 
 import lombok.*;
 

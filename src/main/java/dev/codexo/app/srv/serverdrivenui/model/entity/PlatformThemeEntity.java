@@ -1,6 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.model.entity;
 
-import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button.DotnetMauiCrossPlatformButtonStyleEntity;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonStyleEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -70,5 +70,5 @@ public class PlatformThemeEntity {
     private OffsetDateTime updatedAt;
 
     @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DotnetMauiCrossPlatformButtonStyleEntity> buttonStyles;
+    private List<ButtonStyleEntity> buttonStyles;
 }

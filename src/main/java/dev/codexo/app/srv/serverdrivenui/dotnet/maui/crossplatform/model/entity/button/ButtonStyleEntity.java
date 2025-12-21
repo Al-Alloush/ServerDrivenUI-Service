@@ -1,4 +1,4 @@
-package dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button;
 
 import dev.codexo.app.srv.serverdrivenui.model.entity.PlatformThemeEntity;
 import jakarta.persistence.*;
@@ -23,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DotnetMauiCrossPlatformButtonStyleEntity {
+public class ButtonStyleEntity {
 
     @Id
     @GeneratedValue
@@ -55,7 +55,7 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
     private Border border;
 
     @OneToOne(mappedBy = "buttonStyle", cascade = CascadeType.ALL, orphanRemoval = true)
-    private DotnetMauiCrossPlatformButtonShadowEntity shadow;
+    private ButtonShadowEntity shadow;
 
     // Accessibility properties
     @Embedded
@@ -66,7 +66,7 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
     private String imageSource;
 
     @OneToMany(mappedBy = "buttonStyle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<DotnetMauiCrossPlatformButtonVisualStateEntity> visualStates;
+    private List<ButtonVisualStateEntity> visualStates;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;

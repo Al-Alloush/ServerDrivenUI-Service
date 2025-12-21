@@ -159,7 +159,7 @@ INSERT INTO platform_theme (
 ) VALUES (
              'theme-light-111111111111',
              'aa1be66a-d1f4-4a0e-a3ad-777777777777',
-             'Light',
+             'light',
              'Light Theme',
              TRUE,
              'Default light theme for iMeterRecorder',
@@ -177,7 +177,7 @@ INSERT INTO platform_theme (
 ) VALUES (
              'theme-dark-222222222222',
              'aa1be66a-d1f4-4a0e-a3ad-777777777777',
-             'Dark',
+             'dark',
              'Dark Theme',
              FALSE,
              'Dark theme for iMeterRecorder',

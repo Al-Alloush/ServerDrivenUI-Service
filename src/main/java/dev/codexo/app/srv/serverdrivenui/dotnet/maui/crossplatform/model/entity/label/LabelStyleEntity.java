@@ -1,4 +1,4 @@
-package dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.label;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label;
 
 import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
 import jakarta.persistence.*;
@@ -25,7 +25,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DotnetMauiCrossPlatformLabelStyleEntity {
+public class LabelStyleEntity {
 
     @Id
     @GeneratedValue

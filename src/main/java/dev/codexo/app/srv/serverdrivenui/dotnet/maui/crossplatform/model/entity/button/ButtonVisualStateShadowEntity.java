@@ -1,4 +1,4 @@
-package dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -6,20 +6,14 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.time.OffsetDateTime;
 
-/**
- * Shadow configuration for a .NET MAUI cross-platform button style.
- * <p>
- * Maps to the <Shadow> element inside the base Style:
- *   <Shadow Brush="Black" Opacity="0.3" Radius="8" Offset="0,4" />
- */
 @Entity
-@Table(name = "dotnet_maui_button_shadow")
+@Table(name = "dotnet_maui_button_visual_state_shadow")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DotnetMauiCrossPlatformButtonShadowEntity {
+public class ButtonVisualStateShadowEntity {
 
     @Id
     @GeneratedValue
@@ -32,8 +26,8 @@ public class DotnetMauiCrossPlatformButtonShadowEntity {
      * One-to-one association.
      */
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "button_style_id", nullable = false, unique = true)
-    private DotnetMauiCrossPlatformButtonStyleEntity buttonStyle;
+    @JoinColumn(name = "button_visual_status_style_id", nullable = false, unique = true)
+    private ButtonVisualStateEntity visualSateGroup;
 
     @Column(name = "shadow_brush", length = 128)
     private String shadowBrush;

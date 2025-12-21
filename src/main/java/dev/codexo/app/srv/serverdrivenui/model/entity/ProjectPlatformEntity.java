@@ -1,8 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.model.entity;
 
-import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.label.DotnetMauiCrossPlatformLabelStyleEntity;
-import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactButtonStyleEntity;
-import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactLabelStyleEntity;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -53,12 +51,6 @@ public class ProjectPlatformEntity {
 
 
     @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<DotnetMauiCrossPlatformLabelStyleEntity> dotnetMauiLabelStyles;
+    private List<LabelStyleEntity> dotnetMauiLabelStyles;
 
-    // React styles
-    @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ReactButtonStyleEntity> reactButtonStyles;
-
-    @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ReactLabelStyleEntity> reactLabelStyles;
 }

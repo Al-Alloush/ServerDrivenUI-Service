@@ -1,11 +1,8 @@
-package dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
-
-import java.time.OffsetDateTime;
-import java.util.List;
 
 /**
  * Visual state override for a .NET MAUI cross-platform button.
@@ -29,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DotnetMauiCrossPlatformButtonVisualStateEntity {
+public class ButtonVisualStateEntity {
 
     @Id
     @GeneratedValue
@@ -42,7 +39,7 @@ public class DotnetMauiCrossPlatformButtonVisualStateEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "button_style_id", nullable = false)
-    private DotnetMauiCrossPlatformButtonStyleEntity buttonStyle;
+    private ButtonStyleEntity buttonStyle;
 
     /**
      * Name of the visual state:
@@ -68,7 +65,7 @@ public class DotnetMauiCrossPlatformButtonVisualStateEntity {
     private String borderColor;
 
     @OneToOne(mappedBy = "visualSateGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-    private DotnetMauiCrossPlatformButtonVisualStateShadowEntity shadow;
+    private ButtonVisualStateShadowEntity shadow;
 
 
 }
