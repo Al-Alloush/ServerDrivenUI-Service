@@ -1,6 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.repository;
 
-import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.PlatformThemeEntity;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button.DotnetMauiCrossPlatformButtonStyleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,7 +13,7 @@ public interface DotnetMauiCrossPlatformButtonStyleRepository
         extends JpaRepository<DotnetMauiCrossPlatformButtonStyleEntity, String> {
 
     /**
-     * All button styles defined for a given project + platform.
+     * All button styles for a given theme.
      */
-    List<DotnetMauiCrossPlatformButtonStyleEntity> findByProjectPlatform(ProjectPlatformEntity projectPlatform);
+    List<DotnetMauiCrossPlatformButtonStyleEntity> findByTheme(PlatformThemeEntity theme);
 }

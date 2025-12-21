@@ -2,21 +2,17 @@ package dev.codexo.app.srv.serverdrivenui.service;
 
 import dev.codexo.app.srv.serverdrivenui.model.dto.dotnetmaui.DotnetMauiButtonStyleDto;
 import dev.codexo.app.srv.serverdrivenui.model.dto.dotnetmaui.DotnetMauiButtonThemeWrapperDto;
-import dev.codexo.app.srv.serverdrivenui.model.entity.BrandIdentityEntity;
-import dev.codexo.app.srv.serverdrivenui.model.entity.PlatformEntity;
-import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectEntity;
-import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.*;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button.DotnetMauiCrossPlatformButtonStyleEntity;
-import dev.codexo.app.srv.serverdrivenui.repository.DotnetMauiCrossPlatformButtonStyleRepository;
-import dev.codexo.app.srv.serverdrivenui.repository.PlatformRepository;
-import dev.codexo.app.srv.serverdrivenui.repository.ProjectPlatformRepository;
-import dev.codexo.app.srv.serverdrivenui.repository.ProjectRepository;
+import dev.codexo.app.srv.serverdrivenui.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Read-only service that prepares .NET MAUI styles for a project.
@@ -40,12 +36,14 @@ public class DotnetMauiStyleQueryService {
     private final ProjectRepository projectRepository;
     private final PlatformRepository platformRepository;
     private final ProjectPlatformRepository projectPlatformRepository;
+    private final PlatformThemeRepository themeRepository;
     private final DotnetMauiCrossPlatformButtonStyleRepository buttonStyleRepository;
 
-    public DotnetMauiStyleQueryService(ProjectRepository projectRepository, PlatformRepository platformRepository, ProjectPlatformRepository projectPlatformRepository, DotnetMauiCrossPlatformButtonStyleRepository buttonStyleRepository) {
+    public DotnetMauiStyleQueryService(ProjectRepository projectRepository, PlatformRepository platformRepository, ProjectPlatformRepository projectPlatformRepository, PlatformThemeRepository themeRepository, DotnetMauiCrossPlatformButtonStyleRepository buttonStyleRepository) {
         this.projectRepository = projectRepository;
         this.platformRepository = platformRepository;
         this.projectPlatformRepository = projectPlatformRepository;
+        this.themeRepository = themeRepository;
         this.buttonStyleRepository = buttonStyleRepository;
     }
 
@@ -90,18 +88,31 @@ public class DotnetMauiStyleQueryService {
                     "Project " + projectSlug + " does not have a BrandIdentity configured.");
         }
 
-        // 4) Button style entities
-        List<DotnetMauiCrossPlatformButtonStyleEntity> entities =
-                buttonStyleRepository.findByProjectPlatform(projectPlatform);
+        // 4) Get all themes for this project platform
+        List<PlatformThemeEntity> themes = themeRepository.findByProjectPlatform(projectPlatform);
 
-        List<DotnetMauiButtonStyleDto> styles = entities.stream()
-                .map(e -> mapToDto(e, brand))
-                .toList();
+        if (themes.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "No themes found for project " + projectSlug);
+        }
 
-        // For the demo we return the same styles for light and dark
+        // 5) Build response grouped by theme
+        Map<String, List<DotnetMauiButtonStyleDto>> themeStyles = new HashMap<>();
+
+        for (PlatformThemeEntity theme : themes) {
+            List<DotnetMauiCrossPlatformButtonStyleEntity> entities =
+                    buttonStyleRepository.findByTheme(theme);
+
+            List<DotnetMauiButtonStyleDto> styles = entities.stream()
+                    .map(e -> mapToDto(e, brand))
+                    .toList();
+
+            themeStyles.put(theme.getThemeName(), styles);
+        }
+
         return DotnetMauiButtonThemeWrapperDto.builder()
-                .light(styles)
-                .dark(styles)
+                .themes(themeStyles)
                 .build();
     }
 

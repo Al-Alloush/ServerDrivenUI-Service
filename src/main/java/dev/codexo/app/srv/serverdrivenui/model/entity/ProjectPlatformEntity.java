@@ -1,6 +1,5 @@
 package dev.codexo.app.srv.serverdrivenui.model.entity;
 
-import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button.DotnetMauiCrossPlatformButtonStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.label.DotnetMauiCrossPlatformLabelStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactButtonStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.model.entity.style.react.ReactLabelStyleEntity;
@@ -52,9 +51,6 @@ public class ProjectPlatformEntity {
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
-    // .NET MAUI styles
-    @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<DotnetMauiCrossPlatformButtonStyleEntity> dotnetMauiButtonStyles;
 
     @OneToMany(mappedBy = "projectPlatform", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DotnetMauiCrossPlatformLabelStyleEntity> dotnetMauiLabelStyles;

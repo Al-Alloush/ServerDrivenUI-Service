@@ -1,6 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.model.entity.style.dotnetmaui.crossplatform.button;
 
-import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.PlatformThemeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -13,8 +13,8 @@ import java.util.List;
         name = "dotnet_maui_button_style",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uk_maui_button_style_projectplatform_stylekey",
-                        columnNames = {"project_platform_id", "style_key"}
+                        name = "uk_maui_button_style_projectplatform_theme_stylekey",
+                        columnNames = {"theme_id", "style_key"}
                 )
         }
 )
@@ -32,8 +32,8 @@ public class DotnetMauiCrossPlatformButtonStyleEntity {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "project_platform_id", nullable = false)
-    private ProjectPlatformEntity projectPlatform;
+    @JoinColumn(name = "theme_id", nullable = false)
+    private PlatformThemeEntity theme;
 
     @Column(name = "style_key", nullable = false, length = 100)
     private String styleKey;
