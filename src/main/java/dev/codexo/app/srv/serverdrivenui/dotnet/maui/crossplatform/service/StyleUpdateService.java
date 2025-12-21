@@ -2,10 +2,7 @@ package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service;
 
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleUpdateDto;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonShadowEntity;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonStyleEntity;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonVisualStateEntity;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonVisualStateShadowEntity;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.*;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.ButtonStyleRepository;
 import dev.codexo.app.srv.serverdrivenui.model.entity.BrandIdentityEntity;
 import org.springframework.http.HttpStatus;
@@ -13,7 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class StyleUpdateService {
@@ -37,84 +38,179 @@ public class StyleUpdateService {
                 ));
 
         // Update style key
-        if (updateDto.getKey() != null) {
-            entity.setStyleKey(updateDto.getKey());
-        }
+        entity.setStyleKey(updateDto.getKey());
 
         // Update Appearance
+        updateAppearance(entity, updateDto);
+
+        // Update Typography
+        updateTypography(entity, updateDto);
+
+        // Update Layout
+        updateLayout(entity, updateDto);
+
+        // Update Border
+        updateBorder(entity, updateDto);
+
+        // Update Image
+        entity.setImageSource(updateDto.getImageSource());
+
+        // Update Accessibility
+        updateAccessibility(entity, updateDto);
+
+        // Update Shadow (replace or remove)
+        updateShadow(entity, updateDto);
+
+        // Update Visual States (replace all) - FIX HERE
+        updateVisualStates(entity, updateDto.getVisualStates());
+
+        ButtonStyleEntity saved = buttonStyleRepository.save(entity);
+
+        return mapToDto(saved, saved.getTheme().getProjectPlatform().getProject().getBrandIdentity());
+    }
+
+    private void updateAppearance(ButtonStyleEntity entity, ButtonStyleUpdateDto dto) {
         ButtonStyleEntity.Appearance appearance = entity.getAppearance();
         if (appearance == null) {
             appearance = new ButtonStyleEntity.Appearance();
             entity.setAppearance(appearance);
         }
-        if (updateDto.getText() != null) appearance.setText(updateDto.getText());
-        if (updateDto.getTextColor() != null) appearance.setTextColor(updateDto.getTextColor());
-        if (updateDto.getBackgroundColor() != null) appearance.setBackgroundColor(updateDto.getBackgroundColor());
-        if (updateDto.getOpacity() != null) appearance.setOpacity(updateDto.getOpacity());
-        if (updateDto.getIsVisible() != null) appearance.setVisible(updateDto.getIsVisible());
-        if (updateDto.getIsEnabled() != null) appearance.setEnabled(updateDto.getIsEnabled());
+        appearance.setText(dto.getText());
+        appearance.setTextColor(dto.getTextColor());
+        appearance.setBackgroundColor(dto.getBackgroundColor());
+        appearance.setOpacity(dto.getOpacity());
+        appearance.setVisible(dto.getIsVisible() != null && dto.getIsVisible());
+        appearance.setEnabled(dto.getIsEnabled() != null && dto.getIsEnabled());
+    }
 
-        // Update Typography
+    private void updateTypography(ButtonStyleEntity entity, ButtonStyleUpdateDto dto) {
         ButtonStyleEntity.Typography typography = entity.getTypography();
         if (typography == null) {
             typography = new ButtonStyleEntity.Typography();
             entity.setTypography(typography);
         }
-        if (updateDto.getFontFamily() != null) typography.setFontFamily(updateDto.getFontFamily());
-        if (updateDto.getFontSize() != null) typography.setFontSize(updateDto.getFontSize());
-        if (updateDto.getFontAttributes() != null) typography.setFontAttributes(updateDto.getFontAttributes());
-        if (updateDto.getCharacterSpacing() != null) typography.setCharacterSpacing(updateDto.getCharacterSpacing());
-        if (updateDto.getLineBreakMode() != null) typography.setLineBreakMode(updateDto.getLineBreakMode());
-        if (updateDto.getTextTransform() != null) typography.setTextTransform(updateDto.getTextTransform());
+        typography.setFontFamily(dto.getFontFamily());
+        typography.setFontSize(dto.getFontSize());
+        typography.setFontAttributes(dto.getFontAttributes());
+        typography.setCharacterSpacing(dto.getCharacterSpacing());
+        typography.setLineBreakMode(dto.getLineBreakMode());
+        typography.setTextTransform(dto.getTextTransform());
+    }
 
-        // Update Layout
+    private void updateLayout(ButtonStyleEntity entity, ButtonStyleUpdateDto dto) {
         ButtonStyleEntity.Layout layout = entity.getLayout();
         if (layout == null) {
             layout = new ButtonStyleEntity.Layout();
             entity.setLayout(layout);
         }
-        if (updateDto.getPadding() != null) layout.setPadding(updateDto.getPadding());
-        if (updateDto.getMargin() != null) layout.setMargin(updateDto.getMargin());
-        if (updateDto.getHeightRequest() != null) layout.setHeightRequest(updateDto.getHeightRequest());
-        if (updateDto.getWidthRequest() != null) layout.setWidthRequest(updateDto.getWidthRequest());
-        if (updateDto.getMinimumHeightRequest() != null) layout.setMinimumHeightRequest(updateDto.getMinimumHeightRequest());
-        if (updateDto.getMinimumWidthRequest() != null) layout.setMinimumWidthRequest(updateDto.getMinimumWidthRequest());
-        if (updateDto.getHorizontalOptions() != null) layout.setHorizontalOptions(updateDto.getHorizontalOptions());
-        if (updateDto.getVerticalOptions() != null) layout.setVerticalOptions(updateDto.getVerticalOptions());
-        if (updateDto.getContentLayout() != null) layout.setContentLayout(updateDto.getContentLayout());
+        layout.setPadding(dto.getPadding());
+        layout.setMargin(dto.getMargin());
+        layout.setHeightRequest(dto.getHeightRequest());
+        layout.setWidthRequest(dto.getWidthRequest());
+        layout.setMinimumHeightRequest(dto.getMinimumHeightRequest());
+        layout.setMinimumWidthRequest(dto.getMinimumWidthRequest());
+        layout.setHorizontalOptions(dto.getHorizontalOptions());
+        layout.setVerticalOptions(dto.getVerticalOptions());
+        layout.setContentLayout(dto.getContentLayout());
+    }
 
-        // Update Border
+    private void updateBorder(ButtonStyleEntity entity, ButtonStyleUpdateDto dto) {
         ButtonStyleEntity.Border border = entity.getBorder();
         if (border == null) {
             border = new ButtonStyleEntity.Border();
             entity.setBorder(border);
         }
-        if (updateDto.getBorderColor() != null) border.setBorderColor(updateDto.getBorderColor());
-        if (updateDto.getBorderWidth() != null) border.setBorderWidth(updateDto.getBorderWidth());
-        if (updateDto.getCornerRadius() != null) border.setCornerRadius(updateDto.getCornerRadius());
+        border.setBorderColor(dto.getBorderColor());
+        border.setBorderWidth(dto.getBorderWidth());
+        border.setCornerRadius(dto.getCornerRadius());
+    }
 
-        // Update Image
-        if (updateDto.getImageSource() != null) {
-            entity.setImageSource(updateDto.getImageSource());
-        }
-
-        // Update Accessibility
+    private void updateAccessibility(ButtonStyleEntity entity, ButtonStyleUpdateDto dto) {
         ButtonStyleEntity.Accessibility accessibility = entity.getAccessibility();
         if (accessibility == null) {
             accessibility = new ButtonStyleEntity.Accessibility();
             entity.setAccessibility(accessibility);
         }
-        if (updateDto.getSemanticDescription() != null) accessibility.setSemanticDescription(updateDto.getSemanticDescription());
-        if (updateDto.getSemanticHint() != null) accessibility.setSemanticHint(updateDto.getSemanticHint());
-
-        ButtonStyleEntity saved = buttonStyleRepository.save(entity);
-
-
-        // Convert to DTO before returning
-        return mapToDto(saved, saved.getTheme().getProjectPlatform().getProject().getBrandIdentity());
+        accessibility.setSemanticDescription(dto.getSemanticDescription());
+        accessibility.setSemanticHint(dto.getSemanticHint());
     }
 
-    // Add the same mapping methods from StyleQueryService
+    private void updateShadow(ButtonStyleEntity entity, ButtonStyleUpdateDto dto) {
+        // Remove existing shadow if dto.shadow is null
+        if (dto.getShadow() == null) {
+            entity.setShadow(null);
+            return;
+        }
+
+        // Create or update shadow
+        ButtonShadowEntity shadow = entity.getShadow();
+        if (shadow == null) {
+            shadow = ButtonShadowEntity.builder()
+                    .buttonStyle(entity)
+                    .createdAt(OffsetDateTime.now())
+                    .build();
+            entity.setShadow(shadow);
+        }
+
+        shadow.setShadowBrush(dto.getShadow().getShadowBrush());
+        shadow.setShadowOpacity(dto.getShadow().getShadowOpacity());
+        shadow.setShadowRadius(dto.getShadow().getShadowRadius());
+        shadow.setShadowOffsetX(dto.getShadow().getShadowOffset());
+    }
+
+    private void updateVisualStates(ButtonStyleEntity existingStyle, List<ButtonStyleUpdateDto.VisualStateUpdateDto> newStates) {
+        if (newStates == null) {
+            return;
+        }
+
+        // Create a map of existing visual states by name for quick lookup
+        Map<String, ButtonVisualStateEntity> existingStatesMap = existingStyle.getVisualStates()
+                .stream()
+                .collect(Collectors.toMap(ButtonVisualStateEntity::getName, Function.identity()));
+
+        // Clear the list but keep the entities for update
+        existingStyle.getVisualStates().clear();
+
+        for (ButtonStyleUpdateDto.VisualStateUpdateDto stateDto : newStates) {
+            ButtonVisualStateEntity stateEntity = existingStatesMap.get(stateDto.getName());
+
+            if (stateEntity == null) {
+                // Create new visual state
+                stateEntity = ButtonVisualStateEntity.builder()
+                        .buttonStyle(existingStyle)
+                        .name(stateDto.getName())
+                        .build();
+            }
+
+            // Update properties
+            stateEntity.setOpacity(stateDto.getOpacity());
+            stateEntity.setTextColor(stateDto.getTextColor());
+            stateEntity.setBackgroundColor(stateDto.getBackgroundColor());
+            stateEntity.setBorderColor(stateDto.getBorderColor());
+
+            // Update shadow
+            if (stateDto.getShadow() != null) {
+                ButtonVisualStateShadowEntity shadowEntity = stateEntity.getShadow();
+                if (shadowEntity == null) {
+                    shadowEntity = ButtonVisualStateShadowEntity.builder()
+                            .visualSateGroup(stateEntity)
+                            .createdAt(OffsetDateTime.now())
+                            .build();
+                    stateEntity.setShadow(shadowEntity);
+                }
+                shadowEntity.setShadowBrush(stateDto.getShadow().getShadowBrush());
+                shadowEntity.setShadowOpacity(stateDto.getShadow().getShadowOpacity());
+                shadowEntity.setShadowRadius(stateDto.getShadow().getShadowRadius());
+                shadowEntity.setShadowOffsetX(stateDto.getShadow().getShadowOffset());
+            } else if (stateEntity.getShadow() != null) {
+                stateEntity.setShadow(null); // Remove shadow if not provided
+            }
+
+            existingStyle.getVisualStates().add(stateEntity);
+        }
+    }
+
+    // Mapping methods
     private ButtonStyleDto mapToDto(ButtonStyleEntity entity, BrandIdentityEntity brand) {
         return ButtonStyleDto.builder()
                 .id(entity.getId())
@@ -185,4 +281,3 @@ public class StyleUpdateService {
                 .build();
     }
 }
-

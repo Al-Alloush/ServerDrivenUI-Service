@@ -38,7 +38,7 @@ public class DontNetCrossPlatformController {
         return ResponseEntity.ok("DotnetMauiButtonStyleController is alive!");
     }
 
-    @GetMapping
+    @GetMapping("/imeterrecorder")
     public ThemeWrapperDto getStyleForImeterRecorder() {
         return styleQueryService.getButtonStylesForProjectSlug("imeterrecorder");
     }
