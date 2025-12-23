@@ -1,10 +1,11 @@
-package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.buttons;
 
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleUpdateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.*;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.ButtonStyleRepository;
 import dev.codexo.app.srv.serverdrivenui.model.entity.BrandIdentityEntity;
+import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,25 +18,35 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class StyleUpdateService {
+public class ButtonStyleUpdateService {
 
     private final ButtonStyleRepository buttonStyleRepository;
 
-    public StyleUpdateService(ButtonStyleRepository buttonStyleRepository) {
+    public ButtonStyleUpdateService(ButtonStyleRepository buttonStyleRepository) {
         this.buttonStyleRepository = buttonStyleRepository;
     }
 
     @Transactional
     public ButtonStyleDto updateButtonStyle(
             String buttonId,
-            ButtonStyleUpdateDto updateDto
-    ) {
+            ButtonStyleUpdateDto updateDto,
+            ProjectPlatformEntity requestorProjectPlatform)
+    {
         ButtonStyleEntity entity = buttonStyleRepository
                 .findById(buttonId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Button style not found with id: " + buttonId
                 ));
+
+        // Security check: ensure the button belongs to the requestor's project-platform
+        if (!entity.getTheme().getProjectPlatform().getId()
+                .equals(requestorProjectPlatform.getId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "You don't have permission to modify this button style"
+            );
+        }
 
         // Update style key
         entity.setStyleKey(updateDto.getKey());

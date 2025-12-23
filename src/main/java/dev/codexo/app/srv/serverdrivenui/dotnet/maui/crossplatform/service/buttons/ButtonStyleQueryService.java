@@ -1,4 +1,4 @@
-package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.buttons;
 
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.ComponentsDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.LogosDto;
@@ -33,89 +33,55 @@ import java.util.Map;
  */
 @Service
 @Transactional(readOnly = true)
-public class StyleQueryService {
+public class ButtonStyleQueryService {
 
     /**
      * Code stored in {@link PlatformEntity#getCode()} for .NET MAUI cross-platform.
      */
-    public static final String DOTNET_MAUI_PLATFORM_CODE = "DOTNET_MAUI";
 
-    private final ProjectRepository projectRepository;
-    private final PlatformRepository platformRepository;
-    private final ProjectPlatformRepository projectPlatformRepository;
+
     private final PlatformThemeRepository themeRepository;
     private final ButtonStyleRepository buttonStyleRepository;
 
-    public StyleQueryService(ProjectRepository projectRepository, PlatformRepository platformRepository, ProjectPlatformRepository projectPlatformRepository, PlatformThemeRepository themeRepository, ButtonStyleRepository buttonStyleRepository) {
-        this.projectRepository = projectRepository;
-        this.platformRepository = platformRepository;
-        this.projectPlatformRepository = projectPlatformRepository;
+    public ButtonStyleQueryService(PlatformThemeRepository themeRepository, ButtonStyleRepository buttonStyleRepository) {
+
         this.themeRepository = themeRepository;
         this.buttonStyleRepository = buttonStyleRepository;
     }
 
-    /**
-     * Returns all .NET MAUI button styles for the given project slug.
-     * <p>
-     * This method is used by the controller behind
-     *   GET /imeterrecorder/style/buttons
-     */
-    public ThemeWrapperDto getButtonStylesForProjectSlug(String projectSlug) {
-        // 1-3) Project, Platform, ProjectPlatform validation (same as before)
-        ProjectEntity project = projectRepository
-                .findBySlugAndDeletedFalse(projectSlug)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Project not found or deleted: " + projectSlug));
 
-        PlatformEntity platform = platformRepository
-                .findByCode(DOTNET_MAUI_PLATFORM_CODE)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Platform not found: " + DOTNET_MAUI_PLATFORM_CODE));
-
-        ProjectPlatformEntity projectPlatform = projectPlatformRepository
-                .findByProjectAndPlatform(project, platform)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Project " + projectSlug + " is not enabled for platform " + DOTNET_MAUI_PLATFORM_CODE));
-
-        if (!projectPlatform.isActive()) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "Platform " + DOTNET_MAUI_PLATFORM_CODE + " is disabled for project " + projectSlug);
-        }
-
-        BrandIdentityEntity brand = project.getBrandIdentity();
+    @Transactional(readOnly = true)
+    public ThemeWrapperDto getButtonStylesForProjectPlatform(ProjectPlatformEntity projectPlatform) {
+        BrandIdentityEntity brand = projectPlatform.getProject().getBrandIdentity();
         if (brand == null) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "Project " + projectSlug + " does not have a BrandIdentity configured.");
+                    "Project does not have a BrandIdentity configured.");
         }
 
-        // 4) Get themes
+        // Get themes for this specific project-platform
         List<PlatformThemeEntity> themes = themeRepository.findByProjectPlatform(projectPlatform);
 
-        // 5) Find light and dark themes
+        // Find light and dark themes
         PlatformThemeEntity lightTheme = themes.stream()
                 .filter(t -> "Light".equalsIgnoreCase(t.getThemeName()))
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Light theme not found for project " + projectSlug));
+                        "Light theme not found for project " + projectPlatform.getProject().getSlug()));
 
         PlatformThemeEntity darkTheme = themes.stream()
                 .filter(t -> "Dark".equalsIgnoreCase(t.getThemeName()))
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
-                        "Dark theme not found for project " + projectSlug));
+                        "Dark theme not found for project " + projectPlatform.getProject().getSlug()));
 
-        // 6) Get button styles for each theme
+        // Get button styles for each theme
         List<ButtonStyleEntity> lightButtons = buttonStyleRepository.findByTheme(lightTheme);
         List<ButtonStyleEntity> darkButtons = buttonStyleRepository.findByTheme(darkTheme);
 
-        // 7) Build ThemeWrapperDto
+        // Build ThemeWrapperDto
         return ThemeWrapperDto.builder()
                 .version(1)
                 .createdDateTime(LocalDateTime.now())
@@ -250,6 +216,5 @@ public class StyleQueryService {
                 .shadowOffset(shadow.getShadowOffsetX())
                 .build();
     }
-
 
 }

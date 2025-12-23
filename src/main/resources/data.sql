@@ -73,7 +73,7 @@ INSERT INTO platform (
     description
 ) VALUES (
              'f5b31971-b864-4e62-a4c0-444444444444',
-             'DOTNET_MAUI',
+             'DOTNET_MAUI_CROSS_PLATFORM',
              '.NET MAUI Cross Platform',
              'Cross-platform mobile / desktop client built with .NET MAUI.'
          );
@@ -143,6 +143,27 @@ INSERT INTO project_platform (
              'f5b31971-b864-4e62-a4c0-444444444444',
              TRUE,
              CURRENT_TIMESTAMP
+         );
+
+-- ============================================================
+-- PROJECT API KEY
+-- ============================================================
+INSERT INTO project_api_key (
+    id,
+    project_platform_id,
+    api_key,
+    is_active,
+    created_at,
+    expires_at,
+    last_used_at
+) VALUES (
+             'pk-demo-111111111111',
+             'aa1be66a-d1f4-4a0e-a3ad-777777777777',
+             'pk_live_imeterrecorder_demo_2024',
+             TRUE,
+             CURRENT_TIMESTAMP,
+             DATEADD('DAY', 90, CURRENT_TIMESTAMP),
+             NULL
          );
 
 -- ============================================================
