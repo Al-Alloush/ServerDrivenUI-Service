@@ -224,7 +224,7 @@ INSERT INTO dotnet_maui_button_style (
 ) VALUES (
              'bdfc7632-35c7-4a9c-852c-111111111111',
              'theme-light-111111111111',
-             'PrimaryButton',
+             'default_button_style',
              'Primary Button',
              '#FFFFFF',
              '#729af7',
@@ -291,7 +291,7 @@ INSERT INTO dotnet_maui_button_style (
 ) VALUES (
              'bdfc7632-35c7-4a9c-852c-222222222222',
              'theme-dark-222222222222',
-             'PrimaryButton',
+             'default_button_style',
              'Primary Button',
              '#FFFFFF',
              '#729af7',
@@ -358,7 +358,7 @@ INSERT INTO dotnet_maui_button_style (
 ) VALUES (
              'c3dbc5af-6658-4d86-9e11-333333333333',
              'theme-light-111111111111',
-             'SecondaryButton',
+             'Secondary',
              'Secondary Button',
              '#FFFFFF',
              '#3f733c',
@@ -425,7 +425,7 @@ INSERT INTO dotnet_maui_button_style (
 ) VALUES (
              'c3dbc5af-6658-4d86-9e11-444444444444',
              'theme-dark-222222222222',
-             'SecondaryButton',
+             'Secondary',
              'Secondary Button',
              '#8c8c8c',
              '#0e300c',
