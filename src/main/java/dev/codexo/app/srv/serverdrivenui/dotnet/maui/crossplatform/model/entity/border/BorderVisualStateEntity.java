@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
-@Table(name = "dotnet_maui_border_visual_state",
+@Table(name = "dotnetmaui_crossplatform_border_visualstate",
         uniqueConstraints = @UniqueConstraint(name = "uk_maui_border_state_border_style_name",
                 columnNames = {"border_style_id", "name"}))
 @Getter

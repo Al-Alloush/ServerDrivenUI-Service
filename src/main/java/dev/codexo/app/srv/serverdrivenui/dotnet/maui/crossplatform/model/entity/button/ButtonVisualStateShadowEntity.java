@@ -7,7 +7,7 @@ import org.hibernate.annotations.UuidGenerator;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "dotnet_maui_button_visual_state_shadow")
+@Table(name = "dotnetmaui_crossplatform_button_visualstate_shadow")
 @Getter
 @Setter
 @NoArgsConstructor

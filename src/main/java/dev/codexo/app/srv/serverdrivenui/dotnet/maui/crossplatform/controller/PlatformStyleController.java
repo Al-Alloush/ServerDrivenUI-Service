@@ -2,7 +2,7 @@ package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.controller;
 
 
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.ThemeWrapperDto;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.buttons.ButtonStyleQueryService;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.PlatformStyleService;
 import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
 import dev.codexo.app.srv.serverdrivenui.service.multitenant.ApiKeyValidatorService;
 import org.jspecify.annotations.NonNull;
@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/styles/v1/dotnet-maui-cross-platform")
 public class PlatformStyleController {
 
-    private final ButtonStyleQueryService styleQueryService;
+    private final PlatformStyleService styleQueryService;
     private final ApiKeyValidatorService apiKeyValidator;
 
-    public PlatformStyleController(ButtonStyleQueryService styleQueryService, ApiKeyValidatorService apiKeyValidator) {
+    public PlatformStyleController(PlatformStyleService styleQueryService, ApiKeyValidatorService apiKeyValidator) {
         this.styleQueryService = styleQueryService;
         this.apiKeyValidator = apiKeyValidator;
     }
@@ -45,7 +45,7 @@ public class PlatformStyleController {
         ProjectPlatformEntity projectPlatform = apiKeyValidator.validateAndGetProjectPlatform(apiKey, "DOTNET_MAUI_CROSS_PLATFORM");
 
         // Get styles
-        var styles = styleQueryService.getButtonStylesForProjectPlatform(projectPlatform);
+        var styles = styleQueryService.getPlatformStyle(projectPlatform);
 
         return ResponseEntity.ok(styles);
     }

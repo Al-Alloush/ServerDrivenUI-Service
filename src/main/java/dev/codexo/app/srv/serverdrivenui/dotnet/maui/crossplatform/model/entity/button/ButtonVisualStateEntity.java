@@ -13,7 +13,7 @@ import org.hibernate.annotations.UuidGenerator;
  */
 @Entity
 @Table(
-        name = "dotnet_maui_button_visual_state",
+        name = "dotnetmaui_crossplatform_button_visualstate",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_maui_button_state_button_style_name",

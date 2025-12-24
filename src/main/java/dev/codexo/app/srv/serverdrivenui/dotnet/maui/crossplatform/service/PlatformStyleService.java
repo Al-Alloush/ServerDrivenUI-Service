@@ -1,12 +1,16 @@
-package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.buttons;
+package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service;
 
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.ComponentsDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.LogosDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.ThemeDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.ThemeWrapperDto;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.border.BorderStyleDto;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.BorderStyleEntity;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.BorderVisualStateEntity;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonShadowEntity;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonVisualStateEntity;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonVisualStateShadowEntity;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.BorderStyleRepository;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.ButtonStyleRepository;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.button.ButtonStyleDto;
 import dev.codexo.app.srv.serverdrivenui.model.entity.*;
@@ -22,36 +26,37 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Read-only service that prepares .NET MAUI styles for a project.
+ * Service that prepares .NET MAUI styles for a project.
  * <p>
- * Workflow:
- *  1. Load project by slug.
- *  2. Load .NET MAUI platform entity.
- *  3. Resolve ProjectPlatform relation.
- *  4. Use BrandIdentity + ButtonStyle entities to build the payload
- *     expected by the MAUI client.
+ * Provides separate functions to build different component types:
+ * - Buttons
+ * - Colors
+ * - Labels
+ * - Entries
+ * - Borders
  */
 @Service
 @Transactional(readOnly = true)
-public class ButtonStyleQueryService {
-
-    /**
-     * Code stored in {@link PlatformEntity#getCode()} for .NET MAUI cross-platform.
-     */
-
+public class PlatformStyleService {
 
     private final PlatformThemeRepository themeRepository;
     private final ButtonStyleRepository buttonStyleRepository;
+    private final BorderStyleRepository borderStyleRepository;
 
-    public ButtonStyleQueryService(PlatformThemeRepository themeRepository, ButtonStyleRepository buttonStyleRepository) {
-
+    public PlatformStyleService(PlatformThemeRepository themeRepository,
+                                ButtonStyleRepository buttonStyleRepository,
+                                BorderStyleRepository borderStyleRepository) {
         this.themeRepository = themeRepository;
         this.buttonStyleRepository = buttonStyleRepository;
+        this.borderStyleRepository = borderStyleRepository;
     }
 
-
+    /**
+     * Main entry point to get all platform styles for a project-platform.
+     * Coordinates the building of all component types.
+     */
     @Transactional(readOnly = true)
-    public ThemeWrapperDto getButtonStylesForProjectPlatform(ProjectPlatformEntity projectPlatform) {
+    public ThemeWrapperDto getPlatformStyle(ProjectPlatformEntity projectPlatform) {
         BrandIdentityEntity brand = projectPlatform.getProject().getBrandIdentity();
         if (brand == null) {
             throw new ResponseStatusException(
@@ -81,37 +86,52 @@ public class ButtonStyleQueryService {
         List<ButtonStyleEntity> lightButtons = buttonStyleRepository.findByTheme(lightTheme);
         List<ButtonStyleEntity> darkButtons = buttonStyleRepository.findByTheme(darkTheme);
 
+        // Get border styles for each theme
+        List<BorderStyleEntity> lightBorders = borderStyleRepository.findByTheme(lightTheme);
+        List<BorderStyleEntity> darkBorders = borderStyleRepository.findByTheme(darkTheme);
+
         // Build ThemeWrapperDto
         return ThemeWrapperDto.builder()
                 .version(1)
                 .createdDateTime(LocalDateTime.now())
                 .themes(Map.of(
-                        "light", buildThemeDto(lightButtons, brand, true),
-                        "dark", buildThemeDto(darkButtons, brand, false)
+                        "light", buildThemeDto(lightButtons, lightBorders, brand, true),
+                        "dark", buildThemeDto(darkButtons, darkBorders, brand, false)
                 ))
                 .logos(buildLogosDto(brand))
                 .build();
     }
 
+
+
+    /**
+     * Builds a ThemeDto with all components for a specific theme.
+     */
     private ThemeDto buildThemeDto(
             List<ButtonStyleEntity> buttons,
+            List<BorderStyleEntity> borders,
             BrandIdentityEntity brand,
             boolean isLight) {
 
         return ThemeDto.builder()
                 .colors(buildColors(brand, isLight))
                 .components(ComponentsDto.builder()
-                        .buttons(buttons.stream()
-                                .map(e -> mapToDto(e, brand))
-                                .toList())
-                        .labels(List.of())
-                        .entries(List.of())
+                        .buttons(buildButtons(buttons, brand))
+                        .labels(buildLabels())
+                        .entries(buildEntries())
+                        .borders(buildBorders(borders))
                         .build())
                 .build();
     }
 
-
-    private Map<String, String> buildColors(BrandIdentityEntity brand, boolean isLight) {
+    /**
+     * Builds the color palette map for a theme.
+     *
+     * @param brand The brand identity containing color information
+     * @param isLight Whether this is for a light theme
+     * @return Map of color names to hex values
+     */
+    public Map<String, String> buildColors(BrandIdentityEntity brand, boolean isLight) {
         return Map.of(
                 "primary", brand.getPrimaryColor(),
                 "secondary", brand.getSecondaryColor(),
@@ -121,6 +141,56 @@ public class ButtonStyleQueryService {
         );
     }
 
+    /**
+     * Builds the list of button styles from entities.
+     *
+     * @param buttonEntities List of button style entities
+     * @param brand The brand identity for fallback values
+     * @return List of ButtonStyleDto
+     */
+    public List<ButtonStyleDto> buildButtons(List<ButtonStyleEntity> buttonEntities, BrandIdentityEntity brand) {
+        return buttonEntities.stream()
+                .map(entity -> mapButtonToDto(entity, brand))
+                .toList();
+    }
+
+    /**
+     * Builds the list of label styles.
+     * TODO: Implement when LabelStyleEntity is available
+     *
+     * @return Empty list for now
+     */
+    public List<Object> buildLabels() {
+        // TODO: Implement label style mapping
+        return List.of();
+    }
+
+    /**
+     * Builds the list of entry (input field) styles.
+     * TODO: Implement when EntryStyleEntity is available
+     *
+     * @return Empty list for now
+     */
+    public List<Object> buildEntries() {
+        // TODO: Implement entry style mapping
+        return List.of();
+    }
+
+    /**
+     * Builds the list of border styles from entities.
+     *
+     * @param borderEntities List of border style entities
+     * @return List of BorderStyleDto
+     */
+    public List<BorderStyleDto> buildBorders(List<BorderStyleEntity> borderEntities) {
+        return borderEntities.stream()
+                .map(this::mapBorderToDto)
+                .toList();
+    }
+
+    /**
+     * Builds logos DTO for both light and dark themes.
+     */
     private Map<String, LogosDto> buildLogosDto(BrandIdentityEntity brand) {
         return Map.of(
                 "light", LogosDto.builder()
@@ -134,8 +204,10 @@ public class ButtonStyleQueryService {
         );
     }
 
-
-    private ButtonStyleDto mapToDto(ButtonStyleEntity entity, BrandIdentityEntity brand) {
+    /**
+     * Maps a ButtonStyleEntity to ButtonStyleDto.
+     */
+    private ButtonStyleDto mapButtonToDto(ButtonStyleEntity entity, BrandIdentityEntity brand) {
         return ButtonStyleDto.builder()
                 .id(entity.getId())
                 .key(entity.getStyleKey())
@@ -214,6 +286,63 @@ public class ButtonStyleQueryService {
                 .shadowOpacity(shadow.getShadowOpacity())
                 .shadowRadius(shadow.getShadowRadius())
                 .shadowOffset(shadow.getShadowOffsetX())
+                .build();
+    }
+
+    /**
+     * Maps a BorderStyleEntity to BorderStyleDto.
+     */
+    private BorderStyleDto mapBorderToDto(BorderStyleEntity entity) {
+        return BorderStyleDto.builder()
+                .id(entity.getId())
+                .key(entity.getStyleKey())
+                // Border Properties - Fixed mappings
+                .borderColor(entity.getStroke())  // stroke -> borderColor
+                .borderWidth(entity.getStrokeThickness() != null ? entity.getStrokeThickness().intValue() : null)
+                .backgroundColor(entity.getBackground())
+                .strokeShape(entity.getStrokeShape())
+                .strokeThickness(entity.getStrokeThickness() != null ? entity.getStrokeThickness().toString() : null)
+                .strokeDashArray(entity.getStrokeDashArray())
+                .strokeDashOffset(entity.getStrokeDashOffset() != null ? entity.getStrokeDashOffset().toString() : null)
+                .strokeLineCap(entity.getStrokeLineCap() != null ? entity.getStrokeLineCap().name() : null)
+                .strokeLineJoin(entity.getStrokeLineJoin() != null ? entity.getStrokeLineJoin().name() : null)
+                // Layout
+                .padding(entity.getPadding())
+                .margin(entity.getMargin())
+                .heightRequest(entity.getHeightRequest())
+                .widthRequest(entity.getWidthRequest())
+                .minimumHeightRequest(entity.getMinimumHeightRequest())
+                .minimumWidthRequest(entity.getMinimumWidthRequest())
+                .horizontalOptions(entity.getHorizontalOptions() != null ? entity.getHorizontalOptions().name() : null)
+                .verticalOptions(entity.getVerticalOptions() != null ? entity.getVerticalOptions().name() : null)
+                // Appearance
+                .opacity(entity.getOpacity())
+                .isVisible(entity.getIsVisible())
+                .isEnabled(entity.getIsEnabled())
+                // Shadow
+                .shadow(null)
+                // Accessibility
+                .semanticDescription(entity.getAutomationId())
+                .semanticHint(null)
+                // Visual States
+                .visualStates(entity.getVisualStates() != null ?
+                        entity.getVisualStates().stream()
+                                .map(this::mapBorderVisualStateToDto)
+                                .toList() : List.of())
+                .build();
+    }
+
+
+    /**
+     * Maps a BorderVisualStateEntity to BorderStyleDto.VisualStateDto.
+     */
+    private BorderStyleDto.VisualStateDto mapBorderVisualStateToDto(BorderVisualStateEntity state) {
+        return BorderStyleDto.VisualStateDto.builder()
+                .name(state.getName())
+                .opacity(state.getOpacity())
+                .borderColor(null) // Not available in current entity
+                .backgroundColor(null) // Not available in current entity
+                .shadow(null) // Not available in current entity
                 .build();
     }
 

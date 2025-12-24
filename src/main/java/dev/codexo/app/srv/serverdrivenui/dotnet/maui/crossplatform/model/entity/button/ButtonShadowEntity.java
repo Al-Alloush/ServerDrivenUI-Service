@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
  *   <Shadow Brush="Black" Opacity="0.3" Radius="8" Offset="0,4" />
  */
 @Entity
-@Table(name = "dotnet_maui_button_shadow")
+@Table(name = "dotnetmaui_crossplatform_button_shadow")
 @Getter
 @Setter
 @NoArgsConstructor

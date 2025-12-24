@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(
-        name = "dotnet_maui_border_style",
+        name = "dotnetmaui_crossplatform_border_style",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_maui_border_style_theme_stylekey",
@@ -36,7 +36,8 @@ public class BorderStyleEntity {
     @Column(length = 36)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theme_id", nullable = false)
     private PlatformThemeEntity theme;
 

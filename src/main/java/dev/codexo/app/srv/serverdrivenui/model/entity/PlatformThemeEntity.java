@@ -1,5 +1,6 @@
 package dev.codexo.app.srv.serverdrivenui.model.entity;
 
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.BorderStyleEntity;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.button.ButtonStyleEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -69,6 +70,5 @@ public class PlatformThemeEntity {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    @OneToMany(mappedBy = "theme", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ButtonStyleEntity> buttonStyles;
+
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(
-        name = "dotnet_maui_button_style",
+        name = "dotnetmaui_crossplatform_button_style",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_maui_button_style_projectplatform_theme_stylekey",
