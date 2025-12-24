@@ -2,11 +2,7 @@ package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.bord
 
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.border.BorderStyleDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.border.BorderStyleUpdateDto;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.BorderShadowEntity;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.BorderStyleEntity;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.LayoutOptions;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.StrokeLineCap;
-import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.StrokeLineJoin;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.*;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.BorderStyleRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -52,58 +48,57 @@ public class BorderStyleUpdateService {
      * Only updates fields that are non-null in the DTO.
      */
     private void applyUpdates(BorderStyleEntity entity, BorderStyleUpdateDto dto) {
-        // Border Properties
-        if (dto.getBorderColor() != null) {
-            entity.setStroke(dto.getBorderColor());
-            log.debug("Updated borderColor to: {}", dto.getBorderColor());
+        // Background and Stroke
+        if (dto.getBackground() != null) {
+            entity.setBackground(dto.getBackground());
+            log.debug("Updated background to: {}", dto.getBackground());
         }
-        if (dto.getBorderWidth() != null) {
-            entity.setStrokeThickness(dto.getBorderWidth().doubleValue());
-            log.debug("Updated borderWidth to: {}", dto.getBorderWidth());
-        }
-        if (dto.getCornerRadius() != null) {
-            // Convert cornerRadius to strokeShape format
-            entity.setStrokeShape("RoundRectangle " + dto.getCornerRadius());
-            log.debug("Updated cornerRadius to: {}", dto.getCornerRadius());
-        }
-        if (dto.getBackgroundColor() != null) {
-            entity.setBackground(dto.getBackgroundColor());
-            log.debug("Updated backgroundColor to: {}", dto.getBackgroundColor());
-        }
-        if (dto.getStrokeShape() != null) {
-            entity.setStrokeShape(dto.getStrokeShape());
-            log.debug("Updated strokeShape to: {}", dto.getStrokeShape());
+        if (dto.getStroke() != null) {
+            entity.setStroke(dto.getStroke());
+            log.debug("Updated stroke to: {}", dto.getStroke());
         }
         if (dto.getStrokeThickness() != null) {
-            entity.setStrokeThickness(Double.parseDouble(dto.getStrokeThickness()));
+            entity.setStrokeThickness(dto.getStrokeThickness());
             log.debug("Updated strokeThickness to: {}", dto.getStrokeThickness());
         }
+
+        // Stroke Dash Pattern
         if (dto.getStrokeDashArray() != null) {
             entity.setStrokeDashArray(dto.getStrokeDashArray());
             log.debug("Updated strokeDashArray to: {}", dto.getStrokeDashArray());
         }
         if (dto.getStrokeDashOffset() != null) {
-            entity.setStrokeDashOffset(Double.parseDouble(dto.getStrokeDashOffset()));
+            entity.setStrokeDashOffset(dto.getStrokeDashOffset());
             log.debug("Updated strokeDashOffset to: {}", dto.getStrokeDashOffset());
         }
+
+        // Stroke Line Caps and Joins
         if (dto.getStrokeLineCap() != null) {
-            entity.setStrokeLineCap(StrokeLineCap.valueOf(dto.getStrokeLineCap()));
+            entity.setStrokeLineCap(StrokeLineCap.valueOf(dto.getStrokeLineCap().toUpperCase()));
             log.debug("Updated strokeLineCap to: {}", dto.getStrokeLineCap());
         }
         if (dto.getStrokeLineJoin() != null) {
-            entity.setStrokeLineJoin(StrokeLineJoin.valueOf(dto.getStrokeLineJoin()));
+            entity.setStrokeLineJoin(StrokeLineJoin.valueOf(dto.getStrokeLineJoin().toUpperCase()));
             log.debug("Updated strokeLineJoin to: {}", dto.getStrokeLineJoin());
         }
+        if (dto.getStrokeMiterLimit() != null) {
+            entity.setStrokeMiterLimit(dto.getStrokeMiterLimit());
+            log.debug("Updated strokeMiterLimit to: {}", dto.getStrokeMiterLimit());
+        }
 
-        // Layout
+        // Corner Radius (StrokeShape)
+        if (dto.getStrokeShape() != null) {
+            entity.setStrokeShape(dto.getStrokeShape());
+            log.debug("Updated strokeShape to: {}", dto.getStrokeShape());
+        }
+
+        // Padding
         if (dto.getPadding() != null) {
             entity.setPadding(dto.getPadding());
             log.debug("Updated padding to: {}", dto.getPadding());
         }
-        if (dto.getMargin() != null) {
-            entity.setMargin(dto.getMargin());
-            log.debug("Updated margin to: {}", dto.getMargin());
-        }
+
+        // Size
         if (dto.getHeightRequest() != null) {
             entity.setHeightRequest(dto.getHeightRequest());
             log.debug("Updated heightRequest to: {}", dto.getHeightRequest());
@@ -120,20 +115,30 @@ public class BorderStyleUpdateService {
             entity.setMinimumWidthRequest(dto.getMinimumWidthRequest());
             log.debug("Updated minimumWidthRequest to: {}", dto.getMinimumWidthRequest());
         }
+        if (dto.getMaximumHeightRequest() != null) {
+            entity.setMaximumHeightRequest(dto.getMaximumHeightRequest());
+            log.debug("Updated maximumHeightRequest to: {}", dto.getMaximumHeightRequest());
+        }
+        if (dto.getMaximumWidthRequest() != null) {
+            entity.setMaximumWidthRequest(dto.getMaximumWidthRequest());
+            log.debug("Updated maximumWidthRequest to: {}", dto.getMaximumWidthRequest());
+        }
+
+        // Layout
         if (dto.getHorizontalOptions() != null) {
-            entity.setHorizontalOptions(LayoutOptions.valueOf(dto.getHorizontalOptions()));
+            entity.setHorizontalOptions(LayoutOptions.valueOf(dto.getHorizontalOptions().toUpperCase().replace("AND", "AND_")));
             log.debug("Updated horizontalOptions to: {}", dto.getHorizontalOptions());
         }
         if (dto.getVerticalOptions() != null) {
-            entity.setVerticalOptions(LayoutOptions.valueOf(dto.getVerticalOptions()));
+            entity.setVerticalOptions(LayoutOptions.valueOf(dto.getVerticalOptions().toUpperCase().replace("AND", "AND_")));
             log.debug("Updated verticalOptions to: {}", dto.getVerticalOptions());
         }
-
-        // Appearance
-        if (dto.getOpacity() != null) {
-            entity.setOpacity(dto.getOpacity());
-            log.debug("Updated opacity to: {}", dto.getOpacity());
+        if (dto.getMargin() != null) {
+            entity.setMargin(dto.getMargin());
+            log.debug("Updated margin to: {}", dto.getMargin());
         }
+
+        // Visibility and Interaction
         if (dto.getIsVisible() != null) {
             entity.setIsVisible(dto.getIsVisible());
             log.debug("Updated isVisible to: {}", dto.getIsVisible());
@@ -142,15 +147,73 @@ public class BorderStyleUpdateService {
             entity.setIsEnabled(dto.getIsEnabled());
             log.debug("Updated isEnabled to: {}", dto.getIsEnabled());
         }
-
-        // Accessibility
-        if (dto.getSemanticDescription() != null) {
-            entity.setAutomationId(dto.getSemanticDescription());
-            log.debug("Updated semanticDescription to: {}", dto.getSemanticDescription());
+        if (dto.getOpacity() != null) {
+            entity.setOpacity(dto.getOpacity());
+            log.debug("Updated opacity to: {}", dto.getOpacity());
         }
-        if (dto.getSemanticHint() != null) {
-            // Store semantic hint if entity supports it, otherwise log
-            log.debug("Semantic hint provided but not stored in entity: {}", dto.getSemanticHint());
+        if (dto.getInputTransparent() != null) {
+            entity.setInputTransparent(dto.getInputTransparent());
+            log.debug("Updated inputTransparent to: {}", dto.getInputTransparent());
+        }
+
+        // Transforms
+        if (dto.getAnchorX() != null) {
+            entity.setAnchorX(dto.getAnchorX());
+            log.debug("Updated anchorX to: {}", dto.getAnchorX());
+        }
+        if (dto.getAnchorY() != null) {
+            entity.setAnchorY(dto.getAnchorY());
+            log.debug("Updated anchorY to: {}", dto.getAnchorY());
+        }
+        if (dto.getRotation() != null) {
+            entity.setRotation(dto.getRotation());
+            log.debug("Updated rotation to: {}", dto.getRotation());
+        }
+        if (dto.getRotationX() != null) {
+            entity.setRotationX(dto.getRotationX());
+            log.debug("Updated rotationX to: {}", dto.getRotationX());
+        }
+        if (dto.getRotationY() != null) {
+            entity.setRotationY(dto.getRotationY());
+            log.debug("Updated rotationY to: {}", dto.getRotationY());
+        }
+        if (dto.getScale() != null) {
+            entity.setScale(dto.getScale());
+            log.debug("Updated scale to: {}", dto.getScale());
+        }
+        if (dto.getScaleX() != null) {
+            entity.setScaleX(dto.getScaleX());
+            log.debug("Updated scaleX to: {}", dto.getScaleX());
+        }
+        if (dto.getScaleY() != null) {
+            entity.setScaleY(dto.getScaleY());
+            log.debug("Updated scaleY to: {}", dto.getScaleY());
+        }
+        if (dto.getTranslationX() != null) {
+            entity.setTranslationX(dto.getTranslationX());
+            log.debug("Updated translationX to: {}", dto.getTranslationX());
+        }
+        if (dto.getTranslationY() != null) {
+            entity.setTranslationY(dto.getTranslationY());
+            log.debug("Updated translationY to: {}", dto.getTranslationY());
+        }
+
+        // Z-Index
+        if (dto.getZIndex() != null) {
+            entity.setZIndex(dto.getZIndex());
+            log.debug("Updated zIndex to: {}", dto.getZIndex());
+        }
+
+        // Flow Direction
+        if (dto.getFlowDirection() != null) {
+            entity.setFlowDirection(FlowDirection.valueOf(dto.getFlowDirection().toUpperCase()));
+            log.debug("Updated flowDirection to: {}", dto.getFlowDirection());
+        }
+
+        // Semantics
+        if (dto.getAutomationId() != null) {
+            entity.setAutomationId(dto.getAutomationId());
+            log.debug("Updated automationId to: {}", dto.getAutomationId());
         }
 
         // Shadow
@@ -194,36 +257,61 @@ public class BorderStyleUpdateService {
         return BorderStyleDto.builder()
                 .id(entity.getId())
                 .key(entity.getStyleKey())
-                // Border Properties
-                .borderColor(entity.getStroke())
-                .borderWidth(entity.getStrokeThickness() != null ? entity.getStrokeThickness().intValue() : null)
-                .backgroundColor(entity.getBackground())
-                .strokeShape(entity.getStrokeShape())
-                .strokeThickness(entity.getStrokeThickness() != null ? entity.getStrokeThickness().toString() : null)
+                // Background and Stroke
+                .background(entity.getBackground())
+                .stroke(entity.getStroke())
+                .strokeThickness(entity.getStrokeThickness())
+                // Stroke Dash Pattern
                 .strokeDashArray(entity.getStrokeDashArray())
-                .strokeDashOffset(entity.getStrokeDashOffset() != null ? entity.getStrokeDashOffset().toString() : null)
+                .strokeDashOffset(entity.getStrokeDashOffset())
+                // Stroke Line Caps and Joins
                 .strokeLineCap(entity.getStrokeLineCap() != null ? entity.getStrokeLineCap().name() : null)
                 .strokeLineJoin(entity.getStrokeLineJoin() != null ? entity.getStrokeLineJoin().name() : null)
-                // Layout
+                .strokeMiterLimit(entity.getStrokeMiterLimit())
+                // Corner Radius (StrokeShape)
+                .strokeShape(entity.getStrokeShape())
+                // Padding
                 .padding(entity.getPadding())
-                .margin(entity.getMargin())
+                // Size
                 .heightRequest(entity.getHeightRequest())
                 .widthRequest(entity.getWidthRequest())
                 .minimumHeightRequest(entity.getMinimumHeightRequest())
                 .minimumWidthRequest(entity.getMinimumWidthRequest())
+                .maximumHeightRequest(entity.getMaximumHeightRequest())
+                .maximumWidthRequest(entity.getMaximumWidthRequest())
+                // Layout
                 .horizontalOptions(entity.getHorizontalOptions() != null ? entity.getHorizontalOptions().name() : null)
                 .verticalOptions(entity.getVerticalOptions() != null ? entity.getVerticalOptions().name() : null)
-                // Appearance
-                .opacity(entity.getOpacity())
+                .margin(entity.getMargin())
+                // Visibility and Interaction
                 .isVisible(entity.getIsVisible())
                 .isEnabled(entity.getIsEnabled())
+                .opacity(entity.getOpacity())
+                .inputTransparent(entity.getInputTransparent())
+                // Transforms
+                .anchorX(entity.getAnchorX())
+                .anchorY(entity.getAnchorY())
+                .rotation(entity.getRotation())
+                .rotationX(entity.getRotationX())
+                .rotationY(entity.getRotationY())
+                .scale(entity.getScale())
+                .scaleX(entity.getScaleX())
+                .scaleY(entity.getScaleY())
+                .translationX(entity.getTranslationX())
+                .translationY(entity.getTranslationY())
+                // Z-Index
+                .zIndex(entity.getZIndex())
+                // Flow Direction
+                .flowDirection(entity.getFlowDirection() != null ? entity.getFlowDirection().name() : null)
+                // Semantics
+                .automationId(entity.getAutomationId())
                 // Shadow
                 .shadow(mapShadowToDto(entity.getShadow()))
-                // Accessibility
-                .semanticDescription(entity.getAutomationId())
-                .semanticHint(null)
-                // Visual states - not supported yet
-                .visualStates(null)
+                // Visual states - Now mapped
+                .visualStates(entity.getVisualStates() != null ?
+                        entity.getVisualStates().stream()
+                                .map(this::mapVisualStateToDto)
+                                .toList() : null)
                 .build();
     }
 
@@ -239,6 +327,19 @@ public class BorderStyleUpdateService {
                 .shadowOpacity(shadow.getShadowOpacity())
                 .shadowRadius(shadow.getShadowRadius())
                 .shadowOffset(shadow.getShadowOffset())
+                .build();
+    }
+
+    /**
+     * Maps BorderVisualStateEntity to VisualStateDto.
+     */
+    private BorderStyleDto.VisualStateDto mapVisualStateToDto(BorderVisualStateEntity visualState) {
+        if (visualState == null) {
+            return null;
+        }
+        return BorderStyleDto.VisualStateDto.builder()
+                .name(visualState.getName())
+                .opacity(visualState.getOpacity())
                 .build();
     }
 }

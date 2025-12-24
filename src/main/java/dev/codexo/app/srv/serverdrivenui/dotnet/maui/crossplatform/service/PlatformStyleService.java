@@ -296,34 +296,56 @@ public class PlatformStyleService {
         return BorderStyleDto.builder()
                 .id(entity.getId())
                 .key(entity.getStyleKey())
-                // Border Properties
-                .borderColor(entity.getStroke())
-                .borderWidth(entity.getStrokeThickness() != null ? entity.getStrokeThickness().intValue() : null)
-                .backgroundColor(entity.getBackground())
-                .strokeShape(entity.getStrokeShape())
-                .strokeThickness(entity.getStrokeThickness() != null ? entity.getStrokeThickness().toString() : null)
+                // Background and Stroke
+                .background(entity.getBackground())
+                .stroke(entity.getStroke())
+                .strokeThickness(entity.getStrokeThickness())
+                // Stroke Dash Pattern
                 .strokeDashArray(entity.getStrokeDashArray())
-                .strokeDashOffset(entity.getStrokeDashOffset() != null ? entity.getStrokeDashOffset().toString() : null)
+                .strokeDashOffset(entity.getStrokeDashOffset())
+                // Stroke Line Caps and Joins
                 .strokeLineCap(entity.getStrokeLineCap() != null ? entity.getStrokeLineCap().name() : null)
                 .strokeLineJoin(entity.getStrokeLineJoin() != null ? entity.getStrokeLineJoin().name() : null)
-                // Layout
+                .strokeMiterLimit(entity.getStrokeMiterLimit())
+                // Corner Radius (StrokeShape)
+                .strokeShape(entity.getStrokeShape())
+                // Padding
                 .padding(entity.getPadding())
-                .margin(entity.getMargin())
+                // Size
                 .heightRequest(entity.getHeightRequest())
                 .widthRequest(entity.getWidthRequest())
                 .minimumHeightRequest(entity.getMinimumHeightRequest())
                 .minimumWidthRequest(entity.getMinimumWidthRequest())
+                .maximumHeightRequest(entity.getMaximumHeightRequest())
+                .maximumWidthRequest(entity.getMaximumWidthRequest())
+                // Layout
                 .horizontalOptions(entity.getHorizontalOptions() != null ? entity.getHorizontalOptions().name() : null)
                 .verticalOptions(entity.getVerticalOptions() != null ? entity.getVerticalOptions().name() : null)
-                // Appearance
-                .opacity(entity.getOpacity())
+                .margin(entity.getMargin())
+                // Visibility and Interaction
                 .isVisible(entity.getIsVisible())
                 .isEnabled(entity.getIsEnabled())
+                .opacity(entity.getOpacity())
+                .inputTransparent(entity.getInputTransparent())
+                // Transforms
+                .anchorX(entity.getAnchorX())
+                .anchorY(entity.getAnchorY())
+                .rotation(entity.getRotation())
+                .rotationX(entity.getRotationX())
+                .rotationY(entity.getRotationY())
+                .scale(entity.getScale())
+                .scaleX(entity.getScaleX())
+                .scaleY(entity.getScaleY())
+                .translationX(entity.getTranslationX())
+                .translationY(entity.getTranslationY())
+                // Z-Index
+                .zIndex(entity.getZIndex())
+                // Flow Direction
+                .flowDirection(entity.getFlowDirection() != null ? entity.getFlowDirection().name() : null)
+                // Semantics
+                .automationId(entity.getAutomationId())
                 // Shadow
                 .shadow(mapBorderShadowToDto(entity.getShadow()))
-                // Accessibility
-                .semanticDescription(entity.getAutomationId())
-                .semanticHint(null)
                 // Visual States
                 .visualStates(entity.getVisualStates() != null ?
                         entity.getVisualStates().stream()
@@ -351,9 +373,6 @@ public class PlatformStyleService {
         return BorderStyleDto.VisualStateDto.builder()
                 .name(state.getName())
                 .opacity(state.getOpacity())
-                .borderColor(null) // Not available in current entity
-                .backgroundColor(null) // Not available in current entity
-                .shadow(null) // Not available in current entity
                 .build();
     }
 

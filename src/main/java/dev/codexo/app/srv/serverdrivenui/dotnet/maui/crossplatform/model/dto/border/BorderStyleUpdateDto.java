@@ -2,6 +2,10 @@ package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.bo
 
 import lombok.*;
 
+/**
+ * Update DTO for Border styles.
+ * Property names match the exact XAML property names.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -9,39 +13,68 @@ import lombok.*;
 @Builder
 public class BorderStyleUpdateDto {
 
-    // Border Properties (matching BorderStyleDto)
-    private String borderColor;
-    private Integer borderWidth;
-    private Integer cornerRadius;
-    private String backgroundColor;
-    private String strokeShape;
-    private String strokeThickness;
+    // Background and Stroke
+    private String background;
+    private String stroke;
+    private Double strokeThickness;
+
+    // Stroke Dash Pattern
     private String strokeDashArray;
-    private String strokeDashOffset;
+    private Double strokeDashOffset;
+
+    // Stroke Line Caps and Joins
     private String strokeLineCap;
     private String strokeLineJoin;
+    private Double strokeMiterLimit;
 
-    // Layout (matching BorderStyleDto)
+    // Corner Radius (StrokeShape)
+    private String strokeShape;
+
+    // Padding
     private String padding;
-    private String margin;
+
+    // Size
     private Double heightRequest;
     private Double widthRequest;
     private Double minimumHeightRequest;
     private Double minimumWidthRequest;
+    private Double maximumHeightRequest;
+    private Double maximumWidthRequest;
+
+    // Layout
     private String horizontalOptions;
     private String verticalOptions;
+    private String margin;
 
-    // Appearance (matching BorderStyleDto)
-    private Double opacity;
+    // Visibility and Interaction
     private Boolean isVisible;
     private Boolean isEnabled;
+    private Double opacity;
+    private Boolean inputTransparent;
 
-    // Shadow (matching BorderStyleDto)
+    // Transforms
+    private Double anchorX;
+    private Double anchorY;
+    private Double rotation;
+    private Double rotationX;
+    private Double rotationY;
+    private Double scale;
+    private Double scaleX;
+    private Double scaleY;
+    private Double translationX;
+    private Double translationY;
+
+    // Z-Index
+    private Integer zIndex;
+
+    // Flow Direction
+    private String flowDirection;
+
+    // Semantics
+    private String automationId;
+
+    // Shadow
     private ShadowDto shadow;
-
-    // Accessibility (matching BorderStyleDto)
-    private String semanticDescription;
-    private String semanticHint;
 
     @Getter
     @Setter

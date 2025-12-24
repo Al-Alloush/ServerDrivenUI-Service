@@ -92,15 +92,25 @@ public class BorderStyleEntity {
     private Boolean inputTransparent = false;
 
     // Transforms
+    @Column(name = "anchor_x")
     private Double anchorX = 0.5;
+    @Column(name = "anchor_y")
     private Double anchorY = 0.5;
+    @Column(name = "rotation")
     private Double rotation = 0.0;
+    @Column(name = "rotation_x")
     private Double rotationX = 0.0;
+    @Column(name = "rotation_y")
     private Double rotationY = 0.0;
+    @Column(name = "scale")
     private Double scale = 1.0;
+    @Column(name = "scale_x")
     private Double scaleX = 1.0;
+    @Column(name = "scale_y")
     private Double scaleY = 1.0;
+    @Column(name = "translation_x")
     private Double translationX = 0.0;
+    @Column(name = "translation_y")
     private Double translationY = 0.0;
 
     // Z-Index
