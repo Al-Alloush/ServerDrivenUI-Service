@@ -113,6 +113,10 @@ public class BorderStyleEntity {
     // Semantics
     private String automationId = "";
 
+    // Shadow
+    @OneToOne(mappedBy = "borderStyle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private BorderShadowEntity shadow;
+
     // Visual States
     @OneToMany(mappedBy = "borderStyle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BorderVisualStateEntity> visualStates = new ArrayList<>();

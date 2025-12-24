@@ -296,8 +296,8 @@ public class PlatformStyleService {
         return BorderStyleDto.builder()
                 .id(entity.getId())
                 .key(entity.getStyleKey())
-                // Border Properties - Fixed mappings
-                .borderColor(entity.getStroke())  // stroke -> borderColor
+                // Border Properties
+                .borderColor(entity.getStroke())
                 .borderWidth(entity.getStrokeThickness() != null ? entity.getStrokeThickness().intValue() : null)
                 .backgroundColor(entity.getBackground())
                 .strokeShape(entity.getStrokeShape())
@@ -320,7 +320,7 @@ public class PlatformStyleService {
                 .isVisible(entity.getIsVisible())
                 .isEnabled(entity.getIsEnabled())
                 // Shadow
-                .shadow(null)
+                .shadow(mapBorderShadowToDto(entity.getShadow()))
                 // Accessibility
                 .semanticDescription(entity.getAutomationId())
                 .semanticHint(null)
@@ -332,6 +332,17 @@ public class PlatformStyleService {
                 .build();
     }
 
+    private BorderStyleDto.ShadowDto mapBorderShadowToDto(dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.border.BorderShadowEntity shadow) {
+        if (shadow == null) {
+            return null;
+        }
+        return BorderStyleDto.ShadowDto.builder()
+                .shadowBrush(shadow.getShadowBrush())
+                .shadowOpacity(shadow.getShadowOpacity())
+                .shadowRadius(shadow.getShadowRadius())
+                .shadowOffset(shadow.getShadowOffset())
+                .build();
+    }
 
     /**
      * Maps a BorderVisualStateEntity to BorderStyleDto.VisualStateDto.

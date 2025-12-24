@@ -880,6 +880,49 @@ INSERT INTO dotnetmaui_crossplatform_border_style (
 
 
 -- ============================================================
+-- BORDER SHADOWS
+-- ============================================================
+
+-- Light Border Shadow
+INSERT INTO dotnetmaui_crossplatform_border_shadow (
+    id,
+    border_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'bshadow-light-111111111111',
+             'border-light-111111111111',
+             '#3d516b',
+             0.3,
+             3.0,
+             '-0.3,0.3',
+             CURRENT_TIMESTAMP
+         );
+
+-- Dark Border Shadow
+INSERT INTO dotnetmaui_crossplatform_border_shadow (
+    id,
+    border_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'bshadow-dark-222222222222',
+             'border-dark-222222222222',
+             '#f5f5f5',
+             0.3,
+             3.0,
+             '-0.3,0.3',
+             CURRENT_TIMESTAMP
+         );
+
+
+-- ============================================================
 -- BORDER VISUAL STATES
 -- ============================================================
 
