@@ -561,24 +561,24 @@ INSERT INTO dotnetmaui_crossplatform_button_shadow (
 -- BUTTON VISUAL STATES
 -- ============================================================
 
--- Light Primary - Normal
-INSERT INTO dotnetmaui_crossplatform_button_visualstate (
-    id,
-    button_style_id,
-    name,
-    opacity,
-    text_color,
-    background_color,
-    border_color
-) VALUES (
-             'f1a2b3c4-d5e6-47f8-89a0-111111111111',
-             'bdfc7632-35c7-4a9c-852c-111111111111',
-             'Normal',
-             1.0,
-             '#FFFFFF',
-             '#26c998',
-             '#26c998'
-         );
+-- -- Light Primary - Normal
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate (
+--     id,
+--     button_style_id,
+--     name,
+--     opacity,
+--     text_color,
+--     background_color,
+--     border_color
+-- ) VALUES (
+--              'f1a2b3c4-d5e6-47f8-89a0-111111111111',
+--              'bdfc7632-35c7-4a9c-852c-111111111111',
+--              'Normal',
+--              1.0,
+--              '#FFFFFF',
+--              '#26c998',
+--              '#26c998'
+--          );
 
 -- Light Primary - Disabled
 INSERT INTO dotnetmaui_crossplatform_button_visualstate (
@@ -599,62 +599,62 @@ INSERT INTO dotnetmaui_crossplatform_button_visualstate (
              '#CCCCCC'
          );
 
--- Light Primary - PointerOver
-INSERT INTO dotnetmaui_crossplatform_button_visualstate (
-    id,
-    button_style_id,
-    name,
-    opacity,
-    text_color,
-    background_color,
-    border_color
-) VALUES (
-             'f3c4d5e6-f7a8-49b0-92c3-111111111111',
-             'bdfc7632-35c7-4a9c-852c-111111111111',
-             'PointerOver',
-             1.0,
-             '#FFFFFF',
-             '#1fb582',
-             '#1fb582'
-         );
+-- -- Light Primary - PointerOver
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate (
+--     id,
+--     button_style_id,
+--     name,
+--     opacity,
+--     text_color,
+--     background_color,
+--     border_color
+-- ) VALUES (
+--              'f3c4d5e6-f7a8-49b0-92c3-111111111111',
+--              'bdfc7632-35c7-4a9c-852c-111111111111',
+--              'PointerOver',
+--              1.0,
+--              '#FFFFFF',
+--              '#1fb582',
+--              '#1fb582'
+--          );
+--
+-- -- Light Primary - Pressed
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate (
+--     id,
+--     button_style_id,
+--     name,
+--     opacity,
+--     text_color,
+--     background_color,
+--     border_color
+-- ) VALUES (
+--              'f4d5e6f7-a8b9-40c1-93d4-111111111111',
+--              'bdfc7632-35c7-4a9c-852c-111111111111',
+--              'Pressed',
+--              0.9,
+--              '#FFFFFF',
+--              '#18a06d',
+--              '#18a06d'
+--          );
 
--- Light Primary - Pressed
-INSERT INTO dotnetmaui_crossplatform_button_visualstate (
-    id,
-    button_style_id,
-    name,
-    opacity,
-    text_color,
-    background_color,
-    border_color
-) VALUES (
-             'f4d5e6f7-a8b9-40c1-93d4-111111111111',
-             'bdfc7632-35c7-4a9c-852c-111111111111',
-             'Pressed',
-             0.9,
-             '#FFFFFF',
-             '#18a06d',
-             '#18a06d'
-         );
-
--- Dark Primary - Normal
-INSERT INTO dotnetmaui_crossplatform_button_visualstate (
-    id,
-    button_style_id,
-    name,
-    opacity,
-    text_color,
-    background_color,
-    border_color
-) VALUES (
-             'f1a2b3c4-d5e6-47f8-89a0-222222222222',
-             'bdfc7632-35c7-4a9c-852c-222222222222',
-             'Normal',
-             1.0,
-             '#8c8c8c',
-             '#401309',
-             '#26c998'
-         );
+-- -- Dark Primary - Normal
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate (
+--     id,
+--     button_style_id,
+--     name,
+--     opacity,
+--     text_color,
+--     background_color,
+--     border_color
+-- ) VALUES (
+--              'f1a2b3c4-d5e6-47f8-89a0-222222222222',
+--              'bdfc7632-35c7-4a9c-852c-222222222222',
+--              'Normal',
+--              1.0,
+--              '#8c8c8c',
+--              '#401309',
+--              '#26c998'
+--          );
 
 -- Dark Primary - Disabled
 INSERT INTO dotnetmaui_crossplatform_button_visualstate (
@@ -675,85 +675,85 @@ INSERT INTO dotnetmaui_crossplatform_button_visualstate (
              '#CCCCCC'
          );
 
--- Dark Primary - PointerOver
-INSERT INTO dotnetmaui_crossplatform_button_visualstate (
-    id,
-    button_style_id,
-    name,
-    opacity,
-    text_color,
-    background_color,
-    border_color
-) VALUES (
-             'f3c4d5e6-f7a8-49b0-92c3-222222222222',
-             'bdfc7632-35c7-4a9c-852c-222222222222',
-             'PointerOver',
-             1.0,
-             '#66848a',
-             '#092540',
-             '#1fb582'
-         );
-
--- Dark Primary - Pressed
-INSERT INTO dotnetmaui_crossplatform_button_visualstate (
-    id,
-    button_style_id,
-    name,
-    opacity,
-    text_color,
-    background_color,
-    border_color
-) VALUES (
-             'f4d5e6f7-a8b9-40c1-93d4-222222222222',
-             'bdfc7632-35c7-4a9c-852c-222222222222',
-             'Pressed',
-             0.9,
-             '#517c85',
-             '#09402b',
-             '#18a06d'
-         );
+-- -- Dark Primary - PointerOver
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate (
+--     id,
+--     button_style_id,
+--     name,
+--     opacity,
+--     text_color,
+--     background_color,
+--     border_color
+-- ) VALUES (
+--              'f3c4d5e6-f7a8-49b0-92c3-222222222222',
+--              'bdfc7632-35c7-4a9c-852c-222222222222',
+--              'PointerOver',
+--              1.0,
+--              '#66848a',
+--              '#092540',
+--              '#1fb582'
+--          );
+--
+-- -- Dark Primary - Pressed
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate (
+--     id,
+--     button_style_id,
+--     name,
+--     opacity,
+--     text_color,
+--     background_color,
+--     border_color
+-- ) VALUES (
+--              'f4d5e6f7-a8b9-40c1-93d4-222222222222',
+--              'bdfc7632-35c7-4a9c-852c-222222222222',
+--              'Pressed',
+--              0.9,
+--              '#517c85',
+--              '#09402b',
+--              '#18a06d'
+--          );
 
 -- ============================================================
 -- VISUAL STATE SHADOWS
 -- ============================================================
 
--- Light Primary - Normal State Shadow
-INSERT INTO dotnetmaui_crossplatform_button_visualstate_shadow (
-    id,
-    button_visual_status_style_id,
-    shadow_brush,
-    shadow_opacity,
-    shadow_radius,
-    shadow_offset,
-    created_at
-) VALUES (
-             'b1c2d3e4-f5a6-47b8-90c1-111111111111',
-             'f1a2b3c4-d5e6-47f8-89a0-111111111111',
-             '#000000',
-             0.3,
-             8.0,
-             '0,4',
-             CURRENT_TIMESTAMP
-         );
-
--- Dark Primary - Normal State Shadow
-INSERT INTO dotnetmaui_crossplatform_button_visualstate_shadow (
-    id,
-    button_visual_status_style_id,
-    shadow_brush,
-    shadow_opacity,
-    shadow_radius,
-    shadow_offset,
-    created_at
-) VALUES (
-             'b1c2d3e4-f5a6-47b8-90c1-222222222222',
-             'f1a2b3c4-d5e6-47f8-89a0-222222222222',
-             '#696969',
-             0.3,
-             8.0,
-             '0,4',
-             CURRENT_TIMESTAMP
-         );
+-- -- Light Primary - Normal State Shadow
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate_shadow (
+--     id,
+--     button_visual_status_style_id,
+--     shadow_brush,
+--     shadow_opacity,
+--     shadow_radius,
+--     shadow_offset,
+--     created_at
+-- ) VALUES (
+--              'b1c2d3e4-f5a6-47b8-90c1-111111111111',
+--              'f1a2b3c4-d5e6-47f8-89a0-111111111111',
+--              '#000000',
+--              0.3,
+--              8.0,
+--              '0,4',
+--              CURRENT_TIMESTAMP
+--          );
+--
+-- -- Dark Primary - Normal State Shadow
+-- INSERT INTO dotnetmaui_crossplatform_button_visualstate_shadow (
+--     id,
+--     button_visual_status_style_id,
+--     shadow_brush,
+--     shadow_opacity,
+--     shadow_radius,
+--     shadow_offset,
+--     created_at
+-- ) VALUES (
+--              'b1c2d3e4-f5a6-47b8-90c1-222222222222',
+--              'f1a2b3c4-d5e6-47f8-89a0-222222222222',
+--              '#696969',
+--              0.3,
+--              8.0,
+--              '0,4',
+--              CURRENT_TIMESTAMP
+--          );
 
 -- ============================================================
 -- BORDER STYLE DEFINITIONS
@@ -978,18 +978,18 @@ INSERT INTO dotnetmaui_crossplatform_border_shadow (
 -- BORDER VISUAL STATES
 -- ============================================================
 
--- Light Border - Normal
-INSERT INTO dotnetmaui_crossplatform_border_visualstate (
-    id,
-    border_style_id,
-    name,
-    opacity
-) VALUES (
-             'b1c2d3e4-f5a6-47b8-90c1-111111111111',
-             'border-light-111111111111',
-             'Normal',
-             1.0
-         );
+-- -- Light Border - Normal
+-- INSERT INTO dotnetmaui_crossplatform_border_visualstate (
+--     id,
+--     border_style_id,
+--     name,
+--     opacity
+-- ) VALUES (
+--              'b1c2d3e4-f5a6-47b8-90c1-111111111111',
+--              'border-light-111111111111',
+--              'Normal',
+--              1.0
+--          );
 
 -- Light Border - Disabled
 INSERT INTO dotnetmaui_crossplatform_border_visualstate (
@@ -1004,18 +1004,18 @@ INSERT INTO dotnetmaui_crossplatform_border_visualstate (
              0.5
          );
 
--- Dark Border - Normal
-INSERT INTO dotnetmaui_crossplatform_border_visualstate (
-    id,
-    border_style_id,
-    name,
-    opacity
-) VALUES (
-             'b3c4d5e6-f7a8-49b0-92c3-333333333333',
-             'border-dark-222222222222',
-             'Normal',
-             1.0
-         );
+-- -- Dark Border - Normal
+-- INSERT INTO dotnetmaui_crossplatform_border_visualstate (
+--     id,
+--     border_style_id,
+--     name,
+--     opacity
+-- ) VALUES (
+--              'b3c4d5e6-f7a8-49b0-92c3-333333333333',
+--              'border-dark-222222222222',
+--              'Normal',
+--              1.0
+--          );
 
 -- Dark Border - Disabled
 INSERT INTO dotnetmaui_crossplatform_border_visualstate (
