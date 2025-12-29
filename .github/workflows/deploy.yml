@@ -1,9 +1,9 @@
-name: Deploy to Dev Server
+name: Deploy to develop Server
 
 on:
   push:
     branches:
-      - dev
+      - develop
 
 jobs:
   build:
@@ -27,10 +27,10 @@ jobs:
         run: mvn -B clean package -DskipTests
 
       - name: Build Docker Image
-        run: docker build -t serverdrivenui:dev .
+        run: docker build -t serverdrivenui:develop .
 
       - name: Save Docker Image
-        run: docker save serverdrivenui:dev -o ${APP_NAME}
+        run: docker save serverdrivenui:develop -o ${APP_NAME}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -64,11 +64,11 @@ jobs:
 
       # Build Docker image using Dockerfile in repo root
       - name: Build Docker Image
-        run: docker build -t serverdrivenui:dev .
+        run: docker build -t serverdrivenui:develop .
 
       # Save image to a tar file
       - name: Save Docker Image
-        run: docker save serverdrivenui:dev -o ${APP_NAME}
+        run: docker save serverdrivenui:develop -o ${APP_NAME}
 
       # Enable SSH
       - name: Add SSH key
@@ -79,13 +79,13 @@ jobs:
       - name: Add server to known_hosts
         run: ssh-keyscan -p ${SSH_PORT:-22} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      # Upload TAR + docker-compose.dev.yml to server DEPLOY_PATH
+      # Upload TAR + docker-compose.develop.yml to server DEPLOY_PATH
       - name: Upload Required Files
         run: |
           scp -P ${SSH_PORT:-22} ${APP_NAME} \
             ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
 
-          scp -P ${SSH_PORT:-22} deploy/docker-compose.dev.yml \
+          scp -P ${SSH_PORT:-22} deploy/docker-compose.develop.yml \
             ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
 
       # Deploy on Server
@@ -98,10 +98,10 @@ jobs:
             docker load -i ${APP_NAME}
 
             echo "Stopping old containers..."
-            docker compose -f docker-compose.dev.yml down || true
+            docker compose -f docker-compose.develop.yml down || true
 
             echo "Starting new containers..."
-            docker compose -f docker-compose.dev.yml up -d
+            docker compose -f docker-compose.develop.yml up -d
 
             echo "Cleaning unused images..."
             docker image prune -f
