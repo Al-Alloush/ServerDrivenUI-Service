@@ -43,15 +43,18 @@ public class PlatformStyleService {
     private final ButtonStyleRepository buttonStyleRepository;
     private final BorderStyleRepository borderStyleRepository;
     private final dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.LabelStyleRepository labelStyleRepository;
+    private final dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.EntryStyleRepository entryStyleRepository;
 
     public PlatformStyleService(PlatformThemeRepository themeRepository,
                                 ButtonStyleRepository buttonStyleRepository,
                                 BorderStyleRepository borderStyleRepository,
-                                dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.LabelStyleRepository labelStyleRepository) {
+                                dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.LabelStyleRepository labelStyleRepository,
+                                dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.EntryStyleRepository entryStyleRepository) {
         this.themeRepository = themeRepository;
         this.buttonStyleRepository = buttonStyleRepository;
         this.borderStyleRepository = borderStyleRepository;
         this.labelStyleRepository = labelStyleRepository;
+        this.entryStyleRepository = entryStyleRepository;
     }
 
     /**
@@ -97,13 +100,17 @@ public class PlatformStyleService {
         List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity> lightLabels = labelStyleRepository.findByThemeId(lightTheme.getId());
         List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity> darkLabels = labelStyleRepository.findByThemeId(darkTheme.getId());
 
+        // Get entry styles for each theme
+        List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryStyleEntity> lightEntries = entryStyleRepository.findByThemeId(lightTheme.getId());
+        List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryStyleEntity> darkEntries = entryStyleRepository.findByThemeId(darkTheme.getId());
+
         // Build ThemeWrapperDto
         return ThemeWrapperDto.builder()
                 .version(1)
                 .createdDateTime(LocalDateTime.now())
                 .themes(Map.of(
-                        "light", buildThemeDto(lightButtons, lightBorders, lightLabels, brand, true),
-                        "dark", buildThemeDto(darkButtons, darkBorders, darkLabels, brand, false)
+                        "light", buildThemeDto(lightButtons, lightBorders, lightLabels, lightEntries, brand, true),
+                        "dark", buildThemeDto(darkButtons, darkBorders, darkLabels, darkEntries, brand, false)
                 ))
                 .logos(buildLogosDto(brand))
                 .build();
@@ -118,6 +125,7 @@ public class PlatformStyleService {
             List<ButtonStyleEntity> buttons,
             List<BorderStyleEntity> borders,
             List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity> labels,
+            List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryStyleEntity> entries,
             BrandIdentityEntity brand,
             boolean isLight) {
 
@@ -126,7 +134,7 @@ public class PlatformStyleService {
                 .components(ComponentsDto.builder()
                         .buttons(buildButtons(buttons, brand))
                         .labels(buildLabels(labels, brand))
-                        .entries(buildEntries())
+                        .entries(buildEntries(entries, brand))
                         .borders(buildBorders(borders))
                         .build())
                 .build();
@@ -178,14 +186,18 @@ public class PlatformStyleService {
     }
 
     /**
-     * Builds the list of entry (input field) styles.
-     * TODO: Implement when EntryStyleEntity is available
+     * Builds the list of entry styles from entities.
      *
-     * @return Empty list for now
+     * @param entryEntities List of entry style entities
+     * @param brand The brand identity for fallback values
+     * @return List of EntryStyleDto
      */
-    public List<Object> buildEntries() {
-        // TODO: Implement entry style mapping
-        return List.of();
+    public List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto> buildEntries(
+            List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryStyleEntity> entryEntities,
+            BrandIdentityEntity brand) {
+        return entryEntities.stream()
+                .map(entity -> mapEntryToDto(entity, brand))
+                .toList();
     }
 
     /**
@@ -495,6 +507,84 @@ public class PlatformStyleService {
             return null;
         }
         return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.ShadowDto.builder()
+                .shadowBrush(shadow.getShadowBrush())
+                .shadowOpacity(shadow.getShadowOpacity())
+                .shadowRadius(shadow.getShadowRadius())
+                .shadowOffset(shadow.getShadowOffset())
+                .build();
+    }
+
+    /**
+     * Maps an EntryStyleEntity to EntryStyleDto.
+     */
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto mapEntryToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryStyleEntity entity,
+            BrandIdentityEntity brand) {
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto.builder()
+                .id(entity.getId())
+                .key(entity.getStyleKey())
+                // Colors
+                .backgroundColor(entity.getBackgroundColor())
+                .textColor(entity.getTextColor())
+                .placeholderColor(entity.getPlaceholderColor())
+                .cursorColor(entity.getCursorColor())
+                .selectionHighlightColor(entity.getSelectionHighlightColor())
+                // Font Properties
+                .fontSize(entity.getFontSize())
+                .fontFamily(entity.getFontFamily() != null ? entity.getFontFamily() : brand.getFontFamily())
+                // Size and Layout
+                .heightRequest(entity.getHeightRequest())
+                .margin(entity.getMargin())
+                // Entry Behavior
+                .clearButtonVisibility(entity.getClearButtonVisibility() != null ? entity.getClearButtonVisibility().name() : null)
+                .returnType(entity.getReturnType() != null ? entity.getReturnType().name() : null)
+                // Text Alignment
+                .horizontalTextAlignment(entity.getHorizontalTextAlignment() != null ? entity.getHorizontalTextAlignment().name() : null)
+                .verticalTextAlignment(entity.getVerticalTextAlignment() != null ? entity.getVerticalTextAlignment().name() : null)
+                // Additional Properties
+                .keyboard(entity.getKeyboard() != null ? entity.getKeyboard().name() : null)
+                .isPassword(entity.getIsPassword())
+                .maxLength(entity.getMaxLength())
+                // Shadow
+                .shadow(mapEntryShadowToDto(entity.getShadow()))
+                // Visual States
+                .visualStates(entity.getVisualStates() != null ?
+                        entity.getVisualStates().stream()
+                                .map(this::mapEntryVisualStateToDto)
+                                .toList() : null)
+                .build();
+    }
+
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto.ShadowDto mapEntryShadowToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryShadowEntity shadow) {
+        if (shadow == null) {
+            return null;
+        }
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto.ShadowDto.builder()
+                .shadowBrush(shadow.getShadowBrush())
+                .shadowOpacity(shadow.getShadowOpacity())
+                .shadowRadius(shadow.getShadowRadius())
+                .shadowOffset(shadow.getShadowOffset())
+                .build();
+    }
+
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto.VisualStateDto mapEntryVisualStateToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryVisualStateEntity state) {
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto.VisualStateDto.builder()
+                .name(state.getStateName())
+                .opacity(state.getOpacity())
+                .backgroundColor(state.getBackgroundColor())
+                .textColor(state.getTextColor())
+                .shadow(mapEntryVisualStateShadowToDto(state.getShadow()))
+                .build();
+    }
+
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto.ShadowDto mapEntryVisualStateShadowToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.entry.EntryVisualStateShadowEntity shadow) {
+        if (shadow == null) {
+            return null;
+        }
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto.ShadowDto.builder()
                 .shadowBrush(shadow.getShadowBrush())
                 .shadowOpacity(shadow.getShadowOpacity())
                 .shadowRadius(shadow.getShadowRadius())
