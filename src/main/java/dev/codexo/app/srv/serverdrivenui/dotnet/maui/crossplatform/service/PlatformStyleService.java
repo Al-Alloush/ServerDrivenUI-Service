@@ -42,13 +42,16 @@ public class PlatformStyleService {
     private final PlatformThemeRepository themeRepository;
     private final ButtonStyleRepository buttonStyleRepository;
     private final BorderStyleRepository borderStyleRepository;
+    private final dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.LabelStyleRepository labelStyleRepository;
 
     public PlatformStyleService(PlatformThemeRepository themeRepository,
                                 ButtonStyleRepository buttonStyleRepository,
-                                BorderStyleRepository borderStyleRepository) {
+                                BorderStyleRepository borderStyleRepository,
+                                dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.repository.LabelStyleRepository labelStyleRepository) {
         this.themeRepository = themeRepository;
         this.buttonStyleRepository = buttonStyleRepository;
         this.borderStyleRepository = borderStyleRepository;
+        this.labelStyleRepository = labelStyleRepository;
     }
 
     /**
@@ -90,13 +93,17 @@ public class PlatformStyleService {
         List<BorderStyleEntity> lightBorders = borderStyleRepository.findByTheme(lightTheme);
         List<BorderStyleEntity> darkBorders = borderStyleRepository.findByTheme(darkTheme);
 
+        // Get label styles for each theme
+        List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity> lightLabels = labelStyleRepository.findByThemeId(lightTheme.getId());
+        List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity> darkLabels = labelStyleRepository.findByThemeId(darkTheme.getId());
+
         // Build ThemeWrapperDto
         return ThemeWrapperDto.builder()
                 .version(1)
                 .createdDateTime(LocalDateTime.now())
                 .themes(Map.of(
-                        "light", buildThemeDto(lightButtons, lightBorders, brand, true),
-                        "dark", buildThemeDto(darkButtons, darkBorders, brand, false)
+                        "light", buildThemeDto(lightButtons, lightBorders, lightLabels, brand, true),
+                        "dark", buildThemeDto(darkButtons, darkBorders, darkLabels, brand, false)
                 ))
                 .logos(buildLogosDto(brand))
                 .build();
@@ -110,6 +117,7 @@ public class PlatformStyleService {
     private ThemeDto buildThemeDto(
             List<ButtonStyleEntity> buttons,
             List<BorderStyleEntity> borders,
+            List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity> labels,
             BrandIdentityEntity brand,
             boolean isLight) {
 
@@ -117,7 +125,7 @@ public class PlatformStyleService {
                 .colors(buildColors(brand, isLight))
                 .components(ComponentsDto.builder()
                         .buttons(buildButtons(buttons, brand))
-                        .labels(buildLabels())
+                        .labels(buildLabels(labels, brand))
                         .entries(buildEntries())
                         .borders(buildBorders(borders))
                         .build())
@@ -155,14 +163,18 @@ public class PlatformStyleService {
     }
 
     /**
-     * Builds the list of label styles.
-     * TODO: Implement when LabelStyleEntity is available
+     * Builds the list of label styles from entities.
      *
-     * @return Empty list for now
+     * @param labelEntities List of label style entities
+     * @param brand The brand identity for fallback values
+     * @return List of LabelStyleDto
      */
-    public List<Object> buildLabels() {
-        // TODO: Implement label style mapping
-        return List.of();
+    public List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto> buildLabels(
+            List<dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity> labelEntities,
+            BrandIdentityEntity brand) {
+        return labelEntities.stream()
+                .map(entity -> mapLabelToDto(entity, brand))
+                .toList();
     }
 
     /**
@@ -373,6 +385,106 @@ public class PlatformStyleService {
         return BorderStyleDto.VisualStateDto.builder()
                 .name(state.getName())
                 .opacity(state.getOpacity())
+                .build();
+    }
+
+    /**
+     * Maps a LabelStyleEntity to LabelStyleDto.
+     */
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto mapLabelToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelStyleEntity entity,
+            BrandIdentityEntity brand) {
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.builder()
+                .id(entity.getId())
+                .key(entity.getStyleKey())
+                // Text Content
+                .text(entity.getText())
+                .textColor(entity.getTextColor())
+                .formattedText(entity.getFormattedText())
+                // Font Properties
+                .fontFamily(entity.getFontFamily() != null ? entity.getFontFamily() : brand.getFontFamily())
+                .fontSize(entity.getFontSize())
+                .fontAttributes(entity.getFontAttributes() != null ? entity.getFontAttributes().name() : null)
+                .fontAutoScalingEnabled(entity.getFontAutoScalingEnabled())
+                // Text Layout
+                .textTransform(entity.getTextTransform() != null ? entity.getTextTransform().name() : null)
+                .characterSpacing(entity.getCharacterSpacing())
+                .lineBreakMode(entity.getLineBreakMode() != null ? entity.getLineBreakMode().name() : null)
+                .maxLines(entity.getMaxLines())
+                .lineHeight(entity.getLineHeight())
+                // Text Alignment
+                .horizontalTextAlignment(entity.getHorizontalTextAlignment() != null ? entity.getHorizontalTextAlignment().name() : null)
+                .verticalTextAlignment(entity.getVerticalTextAlignment() != null ? entity.getVerticalTextAlignment().name() : null)
+                // Text Decoration
+                .textDecorations(entity.getTextDecorations() != null ? entity.getTextDecorations().name() : null)
+                // Padding
+                .padding(entity.getPadding())
+                // Size
+                .heightRequest(entity.getHeightRequest())
+                .widthRequest(entity.getWidthRequest())
+                .minimumHeightRequest(entity.getMinimumHeightRequest())
+                .minimumWidthRequest(entity.getMinimumWidthRequest())
+                .maximumHeightRequest(entity.getMaximumHeightRequest())
+                .maximumWidthRequest(entity.getMaximumWidthRequest())
+                // Layout
+                .horizontalOptions(entity.getHorizontalOptions() != null ? entity.getHorizontalOptions().name() : null)
+                .verticalOptions(entity.getVerticalOptions() != null ? entity.getVerticalOptions().name() : null)
+                .margin(entity.getMargin())
+                // Background
+                .backgroundColor(entity.getBackgroundColor())
+                // Visibility and Interaction
+                .isVisible(entity.getIsVisible())
+                .isEnabled(entity.getIsEnabled())
+                .opacity(entity.getOpacity())
+                .inputTransparent(entity.getInputTransparent())
+                // Transforms
+                .anchorX(entity.getAnchorX())
+                .anchorY(entity.getAnchorY())
+                .rotation(entity.getRotation())
+                .rotationX(entity.getRotationX())
+                .rotationY(entity.getRotationY())
+                .scale(entity.getScale())
+                .scaleX(entity.getScaleX())
+                .scaleY(entity.getScaleY())
+                .translationX(entity.getTranslationX())
+                .translationY(entity.getTranslationY())
+                // Z-Index
+                .zIndex(entity.getZIndex())
+                // Flow Direction
+                .flowDirection(entity.getFlowDirection() != null ? entity.getFlowDirection().name() : null)
+                // Semantics
+                .automationId(entity.getAutomationId())
+                // Shadow
+                .shadow(mapLabelShadowToDto(entity.getShadow()))
+                // Visual States
+                .visualStates(entity.getVisualStates() != null ?
+                        entity.getVisualStates().stream()
+                                .map(this::mapLabelVisualStateToDto)
+                                .toList() : List.of())
+                .build();
+    }
+
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.ShadowDto mapLabelShadowToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelShadowEntity shadow) {
+        if (shadow == null) {
+            return null;
+        }
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.ShadowDto.builder()
+                .shadowBrush(shadow.getShadowBrush())
+                .shadowOpacity(shadow.getShadowOpacity())
+                .shadowRadius(shadow.getShadowRadius())
+                .shadowOffset(shadow.getShadowOffset())
+                .build();
+    }
+
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.VisualStateDto mapLabelVisualStateToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelVisualStateEntity state) {
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.VisualStateDto.builder()
+                .name(state.getStateName())
+                .opacity(state.getOpacity())
+                .textColor(state.getTextColor())
+                .fontFamily(state.getFontFamily())
+                .fontAttributes(state.getFontAttributes() != null ? state.getFontAttributes().name() : null)
                 .build();
     }
 

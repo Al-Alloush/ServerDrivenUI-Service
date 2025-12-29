@@ -7,20 +7,22 @@ import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.but
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.buttons.ButtonStyleUpdateService;
 import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
 import dev.codexo.app.srv.serverdrivenui.service.multitenant.ApiKeyValidatorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/api/styles/v1/dotnet-maui-cross-platform/buttons")
+@RequiredArgsConstructor
+@Slf4j
+@Tag(name = "Button Styles", description = "API for managing .NET MAUI Button styles")
 public class ButtonController {
 
     private final ButtonStyleUpdateService buttonStyleUpdateService;
     private final ApiKeyValidatorService apiKeyValidator;
-
-    public ButtonController(ButtonStyleUpdateService buttonStyleUpdateService, ApiKeyValidatorService apiKeyValidator) {
-        this.buttonStyleUpdateService = buttonStyleUpdateService;
-        this.apiKeyValidator = apiKeyValidator;
-    }
 
     @PutMapping("/{buttonId}")
     public ResponseEntity<ButtonStyleDto> updateButtonStyle(

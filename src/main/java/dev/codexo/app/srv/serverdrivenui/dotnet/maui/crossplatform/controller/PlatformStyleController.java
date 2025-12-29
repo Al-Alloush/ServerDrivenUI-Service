@@ -5,6 +5,9 @@ import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.The
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.PlatformStyleService;
 import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
 import dev.codexo.app.srv.serverdrivenui.service.multitenant.ApiKeyValidatorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +22,17 @@ import org.springframework.web.bind.annotation.*;
  * So the full URL is:
  *   GET <a href="https://srvdrvnui-dev.codexo.dev/imeterrecorder/style/buttons">...</a>
  */
+
 @RestController
 @RequestMapping("/api/styles/v1/dotnet-maui-cross-platform")
+@RequiredArgsConstructor
+@Slf4j
+@Tag(name = "Component Styles", description = "API for retrieving .NET MAUI component styles")
 public class PlatformStyleController {
 
     private final PlatformStyleService styleQueryService;
     private final ApiKeyValidatorService apiKeyValidator;
 
-    public PlatformStyleController(PlatformStyleService styleQueryService, ApiKeyValidatorService apiKeyValidator) {
-        this.styleQueryService = styleQueryService;
-        this.apiKeyValidator = apiKeyValidator;
-    }
 
     // Health check endpoint
     @GetMapping("/ping")
