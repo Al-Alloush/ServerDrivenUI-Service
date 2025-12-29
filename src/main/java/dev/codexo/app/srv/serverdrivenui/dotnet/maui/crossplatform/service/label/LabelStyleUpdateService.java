@@ -295,8 +295,22 @@ public class LabelStyleUpdateService {
                                 FontAttributes.valueOf(vsDto.getFontAttributes().toUpperCase()) : null)
                         .createdAt(java.time.OffsetDateTime.now())
                         .build();
+
+                // Add shadow to visual state if provided
+                if (vsDto.getShadow() != null) {
+                    LabelVisualStateShadowEntity vsShadow = LabelVisualStateShadowEntity.builder()
+                            .labelVisualState(visualState)
+                            .shadowBrush(vsDto.getShadow().getShadowBrush())
+                            .shadowOpacity(vsDto.getShadow().getShadowOpacity())
+                            .shadowRadius(vsDto.getShadow().getShadowRadius())
+                            .shadowOffset(vsDto.getShadow().getShadowOffset())
+                            .createdAt(java.time.OffsetDateTime.now())
+                            .build();
+                    visualState.setShadow(vsShadow);
+                }
+
                 entity.getVisualStates().add(visualState);
-                log.debug("Added/Updated visual state: {}", vsDto.getName());
+                log.debug("Added/Updated visual state: {} with shadow: {}", vsDto.getName(), vsDto.getShadow() != null);
             }
         }
     }
@@ -403,6 +417,22 @@ public class LabelStyleUpdateService {
                 .textColor(visualState.getTextColor())
                 .fontFamily(visualState.getFontFamily())
                 .fontAttributes(visualState.getFontAttributes() != null ? visualState.getFontAttributes().name() : null)
+                .shadow(mapVisualStateShadowToDto(visualState.getShadow()))
+                .build();
+    }
+
+    /**
+     * Maps LabelVisualStateShadowEntity to ShadowDto.
+     */
+    private LabelStyleDto.ShadowDto mapVisualStateShadowToDto(LabelVisualStateShadowEntity shadow) {
+        if (shadow == null) {
+            return null;
+        }
+        return LabelStyleDto.ShadowDto.builder()
+                .shadowBrush(shadow.getShadowBrush())
+                .shadowOpacity(shadow.getShadowOpacity())
+                .shadowRadius(shadow.getShadowRadius())
+                .shadowOffset(shadow.getShadowOffset())
                 .build();
     }
 }

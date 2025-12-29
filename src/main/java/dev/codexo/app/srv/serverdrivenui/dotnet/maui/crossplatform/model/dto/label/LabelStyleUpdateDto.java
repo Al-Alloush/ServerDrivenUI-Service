@@ -116,6 +116,7 @@ public class LabelStyleUpdateDto {
         private String textColor;
         private String fontFamily;
         private String fontAttributes;
+        private ShadowDto shadow;
     }
 }
 

@@ -485,6 +485,20 @@ public class PlatformStyleService {
                 .textColor(state.getTextColor())
                 .fontFamily(state.getFontFamily())
                 .fontAttributes(state.getFontAttributes() != null ? state.getFontAttributes().name() : null)
+                .shadow(mapLabelVisualStateShadowToDto(state.getShadow()))
+                .build();
+    }
+
+    private dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.ShadowDto mapLabelVisualStateShadowToDto(
+            dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.entity.label.LabelVisualStateShadowEntity shadow) {
+        if (shadow == null) {
+            return null;
+        }
+        return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.ShadowDto.builder()
+                .shadowBrush(shadow.getShadowBrush())
+                .shadowOpacity(shadow.getShadowOpacity())
+                .shadowRadius(shadow.getShadowRadius())
+                .shadowOffset(shadow.getShadowOffset())
                 .build();
     }
 

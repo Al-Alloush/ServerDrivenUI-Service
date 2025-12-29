@@ -41,6 +41,9 @@ public class LabelVisualStateEntity {
     @Column(name = "font_attributes")
     private FontAttributes fontAttributes;
 
+    @OneToOne(mappedBy = "labelVisualState", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private LabelVisualStateShadowEntity shadow;
+
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 }

@@ -118,6 +118,7 @@ public class LabelStyleDto {
         private String textColor;
         private String fontFamily;
         private String fontAttributes;
+        private ShadowDto shadow;
     }
 }
 

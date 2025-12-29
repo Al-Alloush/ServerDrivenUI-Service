@@ -1321,3 +1321,45 @@ INSERT INTO dotnetmaui_crossplatform_label_visualstate (
              CURRENT_TIMESTAMP
          );
 
+-- ============================================================
+-- LABEL VISUAL STATE SHADOWS
+-- ============================================================
+
+-- Light Label - Disabled State Shadow
+INSERT INTO dotnetmaui_crossplatform_label_visualstate_shadow (
+    id,
+    label_visual_status_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'label-vs-shadow-light-disabled',
+             'label-vs-light-disabled',
+             '#3d516b',
+             0.3,
+             3.0,
+             '-0.0,0.0',
+             CURRENT_TIMESTAMP
+         );
+
+-- Dark Label - Disabled State Shadow
+INSERT INTO dotnetmaui_crossplatform_label_visualstate_shadow (
+    id,
+    label_visual_status_style_id,
+    shadow_brush,
+    shadow_opacity,
+    shadow_radius,
+    shadow_offset,
+    created_at
+) VALUES (
+             'label-vs-shadow-dark-disabled',
+             'label-vs-dark-disabled',
+             '#f5f5f5',
+             0.3,
+             3.0,
+             '-0.0,0.0',
+             CURRENT_TIMESTAMP
+         );
+
