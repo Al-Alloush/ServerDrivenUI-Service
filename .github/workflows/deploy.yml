@@ -6,7 +6,40 @@ on:
       - dev
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      APP_NAME: ServerDrivenUiServcie-0.0.1-SNAPSHOT.tar
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'maven'
+
+      - name: Build Spring Boot JAR
+        run: mvn -B clean package -DskipTests
+
+      - name: Build Docker Image
+        run: docker build -t serverdrivenui:dev .
+
+      - name: Save Docker Image
+        run: docker save serverdrivenui:dev -o ${APP_NAME}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: ${{ env.APP_NAME }}
+          retention-days: 1
   deploy:
+    needs: build
     runs-on: ubuntu-latest
 
     env:
