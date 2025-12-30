@@ -1,8 +1,10 @@
 package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.controller;
 
 
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleCreateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleUpdateDto;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleCreateService;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -11,8 +13,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +27,42 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Label Styles", description = "API for managing .NET MAUI label styles")
 public class LabelController {
 
+    private final LabelStyleCreateService labelStyleCreateService;
     private final LabelStyleUpdateService labelStyleUpdateService;
+
+    @PostMapping
+    @Operation(
+            summary = "Create a new label style",
+            description = "Creates a new label style for a specific theme."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Label style created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = LabelStyleDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data or label style key already exists",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Theme not found",
+                    content = @Content
+            )
+    })
+    public ResponseEntity<LabelStyleDto> createLabelStyle(
+            @Parameter(description = "Label style properties to create", required = true)
+            @Valid @RequestBody LabelStyleCreateDto createDto
+    ) {
+        log.info("Received request to create label style with key: {} for theme: {}", createDto.getKey(), createDto.getThemeId());
+        LabelStyleDto createdLabelStyle = labelStyleCreateService.createLabelStyle(createDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdLabelStyle);
+    }
 
     @PutMapping("/{labelId}")
     @Operation(
