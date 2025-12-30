@@ -5,6 +5,7 @@ import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.lab
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleUpdateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleCreateService;
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleDeleteService;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleUpdateService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,6 +30,8 @@ public class LabelController {
 
     private final LabelStyleCreateService labelStyleCreateService;
     private final LabelStyleUpdateService labelStyleUpdateService;
+    private final LabelStyleDeleteService labelStyleDeleteService;
+
 
     @PostMapping
     @Operation(
@@ -98,5 +101,22 @@ public class LabelController {
         log.info("Received request to update label style with ID: {}", labelId);
         LabelStyleDto updatedLabelStyle = labelStyleUpdateService.updateLabelStyle(labelId, updateDto);
         return ResponseEntity.ok(updatedLabelStyle);
+    }
+
+    @DeleteMapping("/{labelId}")
+    @Operation(
+            summary = "Delete a label style",
+            description = "Deletes a label style by its ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Label style deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Label style not found", content = @Content)
+    })
+    public ResponseEntity<Void> deleteLabelStyle(
+            @Parameter(description = "ID of the label style to delete", required = true)
+            @PathVariable String labelId) {
+        log.info("Received request to delete label style with ID: {}", labelId);
+        labelStyleDeleteService.deleteLabelStyle(labelId);
+        return ResponseEntity.noContent().build();
     }
 }
