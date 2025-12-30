@@ -1,12 +1,14 @@
 package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.controller;
 
-
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.Constants;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleCreateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleUpdateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleCreateService;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleDeleteService;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.label.LabelStyleUpdateService;
+import dev.codexo.app.srv.serverdrivenui.model.entity.ProjectPlatformEntity;
+import dev.codexo.app.srv.serverdrivenui.service.multitenant.ApiKeyValidatorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,90 +33,60 @@ public class LabelController {
     private final LabelStyleCreateService labelStyleCreateService;
     private final LabelStyleUpdateService labelStyleUpdateService;
     private final LabelStyleDeleteService labelStyleDeleteService;
-
+    private final ApiKeyValidatorService apiKeyValidator;
 
     @PostMapping
-    @Operation(
-            summary = "Create a new label style",
-            description = "Creates a new label style for a specific theme."
-    )
+    @Operation(summary = "Create a new label style", description = "Creates a new label style for a specific theme.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "201",
-                    description = "Label style created successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = LabelStyleDto.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request data or label style key already exists",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Theme not found",
-                    content = @Content
-            )
+            @ApiResponse(responseCode = "201", description = "Label style created successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = LabelStyleDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request data or label style key already exists", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Invalid API key", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Theme not found", content = @Content)
     })
     public ResponseEntity<LabelStyleDto> createLabelStyle(
             @Parameter(description = "Label style properties to create", required = true)
-            @Valid @RequestBody LabelStyleCreateDto createDto
-    ) {
+            @Valid @RequestBody LabelStyleCreateDto createDto,
+            @RequestHeader("X-API-Key") String apiKey) {
+        apiKeyValidator.validateAndGetProjectPlatform(apiKey, Constants.DOTNET_MAUI_CROSS_PLATFORM);
         log.info("Received request to create label style with key: {} for theme: {}", createDto.getKey(), createDto.getThemeId());
         LabelStyleDto createdLabelStyle = labelStyleCreateService.createLabelStyle(createDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdLabelStyle);
     }
 
     @PutMapping("/{labelId}")
-    @Operation(
-            summary = "Update a label style",
-            description = "Updates specific properties of a label style. Only the provided fields will be updated."
-    )
+    @Operation(summary = "Update a label style", description = "Updates specific properties of a label style.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Label style updated successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = LabelStyleDto.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Label style not found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request data",
-                    content = @Content
-            )
+            @ApiResponse(responseCode = "200", description = "Label style updated successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = LabelStyleDto.class))),
+            @ApiResponse(responseCode = "401", description = "Invalid API key", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Label style not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
     })
     public ResponseEntity<LabelStyleDto> updateLabelStyle(
             @Parameter(description = "ID of the label style to update", required = true)
             @PathVariable String labelId,
             @Parameter(description = "Label style properties to update", required = true)
-            @RequestBody LabelStyleUpdateDto updateDto
-    ) {
+            @RequestBody LabelStyleUpdateDto updateDto,
+            @RequestHeader("X-API-Key") String apiKey) {
+        apiKeyValidator.validateAndGetProjectPlatform(apiKey, Constants.DOTNET_MAUI_CROSS_PLATFORM);
         log.info("Received request to update label style with ID: {}", labelId);
         LabelStyleDto updatedLabelStyle = labelStyleUpdateService.updateLabelStyle(labelId, updateDto);
         return ResponseEntity.ok(updatedLabelStyle);
     }
 
     @DeleteMapping("/{labelId}")
-    @Operation(
-            summary = "Delete a label style",
-            description = "Deletes a label style by its ID."
-    )
+    @Operation(summary = "Delete a label style", description = "Deletes a label style by its ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Label style deleted successfully"),
+            @ApiResponse(responseCode = "401", description = "Invalid API key", content = @Content),
             @ApiResponse(responseCode = "404", description = "Label style not found", content = @Content)
     })
     public ResponseEntity<Void> deleteLabelStyle(
             @Parameter(description = "ID of the label style to delete", required = true)
-            @PathVariable String labelId) {
+            @PathVariable String labelId,
+            @RequestHeader("X-API-Key") String apiKey) {
+        apiKeyValidator.validateAndGetProjectPlatform(apiKey, Constants.DOTNET_MAUI_CROSS_PLATFORM);
         log.info("Received request to delete label style with ID: {}", labelId);
         labelStyleDeleteService.deleteLabelStyle(labelId);
         return ResponseEntity.noContent().build();

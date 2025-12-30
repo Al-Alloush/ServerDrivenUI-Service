@@ -1,8 +1,10 @@
 package dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.controller;
 
+import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.Constants;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.entry.EntryStyleUpdateDto;
 import dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.service.entry.EntryStyleUpdateService;
+import dev.codexo.app.srv.serverdrivenui.service.multitenant.ApiKeyValidatorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,41 +25,26 @@ import org.springframework.web.bind.annotation.*;
 public class EntryController {
 
     private final EntryStyleUpdateService entryStyleUpdateService;
+    private final ApiKeyValidatorService apiKeyValidator;
 
     @PutMapping("/{entryId}")
-    @Operation(
-            summary = "Update an entry style",
-            description = "Updates specific properties of an entry style. Only the provided fields will be updated."
-    )
+    @Operation(summary = "Update an entry style", description = "Updates specific properties of an entry style.")
     @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Entry style updated successfully",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = EntryStyleDto.class)
-                    )
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Entry style not found",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Invalid request data",
-                    content = @Content
-            )
+            @ApiResponse(responseCode = "200", description = "Entry style updated successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = EntryStyleDto.class))),
+            @ApiResponse(responseCode = "401", description = "Invalid API key", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Entry style not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid request data", content = @Content)
     })
     public ResponseEntity<EntryStyleDto> updateEntryStyle(
             @Parameter(description = "ID of the entry style to update", required = true)
             @PathVariable String entryId,
             @Parameter(description = "Entry style properties to update", required = true)
-            @RequestBody EntryStyleUpdateDto updateDto
-    ) {
+            @RequestBody EntryStyleUpdateDto updateDto,
+            @RequestHeader("X-API-Key") String apiKey) {
+        apiKeyValidator.validateAndGetProjectPlatform(apiKey, Constants.DOTNET_MAUI_CROSS_PLATFORM);
         log.info("Received request to update entry style with ID: {}", entryId);
         EntryStyleDto updatedEntryStyle = entryStyleUpdateService.updateEntryStyle(entryId, updateDto);
         return ResponseEntity.ok(updatedEntryStyle);
     }
 }
-
