@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface LabelStyleRepository extends JpaRepository<LabelStyleEntity, String> {
     List<LabelStyleEntity> findByThemeId(String themeId);
-    Optional<LabelStyleEntity> findByThemeIdAndStyleKey(String themeId, String styleKey);
+    Optional<LabelStyleEntity> findByThemeIdAndKey(String themeId, String key);
 }
 
 

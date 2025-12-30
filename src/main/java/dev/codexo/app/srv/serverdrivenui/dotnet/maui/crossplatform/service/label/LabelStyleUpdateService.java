@@ -46,6 +46,11 @@ public class LabelStyleUpdateService {
      * Only updates fields that are non-null in the DTO.
      */
     private void applyUpdates(LabelStyleEntity entity, LabelStyleUpdateDto dto) {
+
+        if (dto.getKey() != null) {
+            entity.setKey(dto.getKey());
+        }
+
         // Text Content
         if (dto.getText() != null) {
             entity.setText(dto.getText());
@@ -321,7 +326,7 @@ public class LabelStyleUpdateService {
     private LabelStyleDto convertToDto(LabelStyleEntity entity) {
         return LabelStyleDto.builder()
                 .id(entity.getId())
-                .key(entity.getStyleKey())
+                .key(entity.getKey())
                 // Text Content
                 .text(entity.getText())
                 .textColor(entity.getTextColor())

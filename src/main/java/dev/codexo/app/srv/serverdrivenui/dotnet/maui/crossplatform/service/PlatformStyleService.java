@@ -408,7 +408,7 @@ public class PlatformStyleService {
             BrandIdentityEntity brand) {
         return dev.codexo.app.srv.serverdrivenui.dotnet.maui.crossplatform.model.dto.label.LabelStyleDto.builder()
                 .id(entity.getId())
-                .key(entity.getStyleKey())
+                .key(entity.getKey())
                 // Text Content
                 .text(entity.getText())
                 .textColor(entity.getTextColor())

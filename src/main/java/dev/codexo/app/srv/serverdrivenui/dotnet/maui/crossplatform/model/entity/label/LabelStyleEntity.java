@@ -40,7 +40,7 @@ public class LabelStyleEntity {
     private PlatformThemeEntity theme;
 
     @Column(name = "style_key", nullable = false, length = 100)
-    private String styleKey; // e.g. "default_label_style"
+    private String key; // e.g. "default_label_style"
 
     // Text Content
     @Column(name = "text")

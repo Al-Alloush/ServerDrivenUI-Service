@@ -15,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class LabelStyleUpdateDto {
 
-    // ...existing properties...
+    //
+    private String key;
+
     // Text Content
     private String text;
     private String textColor;
